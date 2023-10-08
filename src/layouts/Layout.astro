@@ -1,12 +1,6 @@
 ---
 import Tabs, { type TabKeys } from "../components/Tabs.astro";
-
-const googleMeasurementID = import.meta.env.GOOGLE_MEASUREMENT_ID;
-if (!googleMeasurementID) {
-  console.warn(
-    `WARNING: Google analytics measurement ID is not set in \`.env\` !`,
-  );
-}
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 
 interface Props {
   title: string;
@@ -42,22 +36,7 @@ const seo = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      type="text/partytown"
-      src={`https://www.googletagmanager.com/gtag/js?id=${googleMeasurementID}`}
-    ></script>
-    <script type="text/partytown" define:vars={{ googleMeasurementID }}>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-
-    gtag("config", googleMeasurementID);
-    </script>
-    <!-- End Google Analytics -->
+    {import.meta.env.PROD ? <GoogleAnalytics /> : null}
 
     <title>{title}</title>
 

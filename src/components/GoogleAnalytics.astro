@@ -1,0 +1,25 @@
+---
+const googleMeasurementID = import.meta.env.GOOGLE_MEASUREMENT_ID;
+if (!googleMeasurementID) {
+  console.warn(
+    `WARNING: Google analytics measurement ID is not set in \`.env\` !`,
+  );
+}
+---
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script
+  async
+  type="text/partytown"
+  src={`https://www.googletagmanager.com/gtag/js?id=${googleMeasurementID}`}
+></script>
+<script type="text/partytown" define:vars={{ googleMeasurementID }}>
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+  dataLayer.push(arguments);
+}
+gtag("js", new Date());
+
+gtag("config", googleMeasurementID);
+</script>
+<!-- End Google Analytics -->
