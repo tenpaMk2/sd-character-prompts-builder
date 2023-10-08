@@ -10,7 +10,7 @@ const { name, prompts } = Astro.props;
 ---
 
 <section class="wrapper">
-  <h1>{name}</h1>
+  <h2>{name}</h2>
   <div class="prompts">
     {prompts.map((prompt) => <PromptButton key={prompt} />)}
   </div>
