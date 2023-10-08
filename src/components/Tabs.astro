@@ -33,7 +33,7 @@ const { selectedKey } = Astro.props;
   {
     tabKeys.map((key) => (
       <a
-        href={key === `main` ? `index.html` : key}
+        href={`${import.meta.env.BASE_URL}${key === `main` ? `` : `${key}/`}`}
         class:list={[{ selected: key === selectedKey }]}
       >
         <span>{tabInfos[key].ja}</span>
