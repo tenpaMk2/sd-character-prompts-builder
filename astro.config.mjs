@@ -4,7 +4,7 @@ import partytown from "@astrojs/partytown";
 // https://astro.build/config
 export default defineConfig({
   site: "https://tenpamk2-blog.netlify.app/",
-  base: "/apps/sd-character-prompts-builder/",
+  base: "/apps/sd-character-prompts-builder/", // Must end with slash in this App.
   integrations: [
     partytown({
       // Adds dataLayer.push as a forwarding-event.
