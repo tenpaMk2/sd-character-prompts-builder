@@ -4,7 +4,9 @@ import { type TabKeys } from "../components/Tabs.astro";
 
 const googleMeasurementID = import.meta.env.GOOGLE_MEASUREMENT_ID;
 if (!googleMeasurementID) {
-  console.warn(`WARNING: Google analytics measurement ID is not set!`);
+  console.warn(
+    `WARNING: Google analytics measurement ID is not set in \`.env\` !`,
+  );
 }
 
 interface Props {
