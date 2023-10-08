@@ -16,11 +16,19 @@ interface Props {
 
 const { title, tabKey } = Astro.props;
 
+const canonicalAbsoluteURL = new URL(Astro.url.pathname, Astro.site);
+canonicalAbsoluteURL.pathname = canonicalAbsoluteURL.pathname.replace(
+  /index\.html$/,
+  ``,
+);
+const baseAbsoluteURL = new URL(import.meta.env.BASE_URL, Astro.site);
+const imageAbsoluteURL = new URL(`ogp.webp`, baseAbsoluteURL);
+
 const seo = {
   appTitle: `sd-character-prompts-builder`,
-  canonical: `https://tenpamk2-blog.netlify.app/apps/sd-character-prompts-builder/`,
   description: `Stable Diffusion用にキャラのプロンプトを簡単に生成できます。`,
-  imageAbsoluteURL: `https://tenpamk2-blog.netlify.app/apps/sd-character-prompts-builder/ogp.webp`,
+  canonicalAbsoluteURL,
+  imageAbsoluteURL,
   imageAlt: `sd-character-prompts-builder イメージ画像`,
   imageWidth: `630`,
   imageHeight: `1200`,
@@ -56,7 +64,7 @@ const seo = {
 
     <meta name="author" content="tenpaMk2" />
     <meta name="description" content={seo.description} />
-    <meta property="og:url" content={seo.canonical} />
+    <meta property="og:url" content={seo.canonicalAbsoluteURL} />
     <meta property="og:title" content={seo.appTitle} />
     <meta property="og:description" content={seo.description} />
     <meta property="og:image" content={seo.imageAbsoluteURL} />
@@ -69,7 +77,7 @@ const seo = {
     <meta name="twitter:site" content="@tenpaMk2" />
     <meta name="twitter:creator" content="@tenpaMk2" />
     <meta name="thumbnail" content={seo.imageAbsoluteURL} />
-    <link rel="canonical" href={seo.canonical} />
+    <link rel="canonical" href={seo.canonicalAbsoluteURL} />
   </head>
   <body>
     <header>
