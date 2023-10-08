@@ -1,0 +1,38 @@
+---
+import { prompts as promptCandidates } from "../store";
+import PromptButton from "./PromptButton.astro";
+interface Props {
+  name: string;
+  prompts: (typeof promptCandidates)[number][];
+}
+
+const { name, prompts } = Astro.props;
+---
+
+<section class="wrapper">
+  <h1>{name}</h1>
+  <div class="prompts">
+    {prompts.map((prompt) => <PromptButton key={prompt} />)}
+  </div>
+</section>
+
+<style>
+  .wrapper {
+    padding: 1rem;
+    background-color: rgb(var(--background-sub));
+    border-radius: 1rem;
+    display: flex;
+    flex-flow: column;
+    gap: 0.8rem;
+  }
+
+  .prompts {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+</style>

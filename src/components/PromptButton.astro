@@ -1,0 +1,58 @@
+---
+import type { PromptState } from "../store";
+
+interface Props {
+  key: keyof PromptState;
+}
+
+const { key } = Astro.props;
+---
+
+<prompt-button data-key={key}>
+  {key}
+</prompt-button>
+
+<script>
+  import { promptState, type PromptState } from "../store";
+
+  class PromptButton extends HTMLElement {
+    constructor() {
+      super();
+
+      const key = this.dataset.key as keyof PromptState;
+      if (!key) return;
+
+      this.addEventListener(`click`, () =>
+        promptState.setKey(key, !promptState.get()[key]),
+      );
+
+      promptState.subscribe((promptState) => {
+        if (promptState[key]) {
+          this.classList.add(`enable`);
+        } else {
+          this.classList.remove(`enable`);
+        }
+      });
+    }
+  }
+
+  customElements.define(`prompt-button`, PromptButton);
+</script>
+
+<style>
+  prompt-button {
+    border: 1px solid rgb(var(--text-main));
+    border-radius: 0.5rem;
+    padding: 0.4rem;
+    transition-duration: 200ms;
+  }
+  prompt-button:hover {
+    background-color: rgb(var(--accent-dark));
+    transition-duration: 200ms;
+  }
+
+  .enable {
+    background: rgb(var(--accent));
+    border-color: rgb(var(--accent-dark));
+  }
+</style>

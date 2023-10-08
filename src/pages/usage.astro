@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { tabInfos, type TabKeys } from "../components/Tabs.astro";
+
+const tabKey: TabKeys = `usage`;
+const tabName = tabInfos[tabKey].ja;
+const layoutInfo = {
+  tabKey,
+  tabName,
+  title: `Welcome to Astro. | ${tabName}`,
+};
+---
+
+<Layout {...layoutInfo}>
+  <article>
+    <h1>このように使うのじゃ</h1>
+    <p>うほほい。</p>
+  </article>
+</Layout>
+
+<style>
+  article {
+  }
+</style>
