@@ -27,7 +27,7 @@ const names: { [K in Category]: string } = {
       <CategoryArea name={names[category]} key={category} />
     ))
   }
-  <pre><code /></pre>
+  <pre><code id="output-prompt" /></pre>
 </Layout>
 
 <script>
@@ -38,7 +38,7 @@ const names: { [K in Category]: string } = {
       .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
       .join(``);
 
-    const code = document.querySelector(`code`)!;
+    const code = document.querySelector(`#output-prompt`)!;
     code.textContent = result;
   });
 </script>
