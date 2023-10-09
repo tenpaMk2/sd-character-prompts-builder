@@ -19,6 +19,16 @@ const names: { [K in Category]: string } = {
   hairLengths: `髪の長さ`,
   hairStyles: `髪型`,
 };
+
+const n = allCategories.length;
+const colors: { [K in Category]: string } = {
+  eyesColors: `hsl(${(0 * 360) / n}deg 100% 50% / 30%)`,
+  eyesShapes: `hsl(${(1 * 360) / n}deg 100% 50% / 30%)`,
+  eyebrows: `hsl(${(2 * 360) / n}deg 100% 50% / 30%)`,
+  eyelashes: `hsl(${(3 * 360) / n}deg 100% 50% / 30%)`,
+  hairLengths: `hsl(${(4 * 360) / n}deg 100% 50% / 30%)`,
+  hairStyles: `hsl(${(5 * 360) / n}deg 100% 50% / 30%)`,
+};
 ---
 
 <Layout {...layoutInfo}>
@@ -29,19 +39,29 @@ const names: { [K in Category]: string } = {
       <CategoryArea name={names[category]} key={category} />
     ))
   }
-  <pre><code id="output-prompt" /></pre>
+  <pre
+    id="prompt-output">
+    {allCategories.map((category) => 
+      (<code class={category} style={`background-color:${colors[category]}`} />)
+      )}
+  </pre>
 </Layout>
 
 <script>
-  import { promptStates } from "../store";
+  import { allCategories, promptStates } from "../store";
 
   promptStates.subscribe((promptStates) => {
-    const result = promptStates
-      .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
-      .join(``);
+    for (const category of allCategories) {
+      const categoryMatches = promptStates.filter(
+        ({ category: c }) => c === category,
+      );
+      const resultPrompts = categoryMatches
+        .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
+        .join(``);
 
-    const code = document.querySelector(`#output-prompt`)!;
-    code.textContent = result;
+      const code = document.querySelector(`#prompt-output > .${category}`)!;
+      code.textContent = resultPrompts;
+    }
   });
 
   // Enable scripts only production mode.
@@ -74,10 +94,9 @@ const names: { [K in Category]: string } = {
   }
 
   pre {
-    background-color: rgb(20% 20% 20%);
+    background-color: rgb(10% 10% 10%);
+    border-radius: 1rem;
     padding: 1rem;
     white-space: pre-wrap;
-  }
-  code {
   }
 </style>
