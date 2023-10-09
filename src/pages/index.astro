@@ -22,6 +22,8 @@ const names: { [K in Category]: string } = {
 ---
 
 <Layout {...layoutInfo}>
+  <before-unload-script data-prod={import.meta.env.PROD} style="display:none"
+  ></before-unload-script>
   {
     allCategories.map((category) => (
       <CategoryArea name={names[category]} key={category} />
@@ -33,11 +35,6 @@ const names: { [K in Category]: string } = {
 <script>
   import { promptStates } from "../store";
 
-  window.addEventListener(`beforeunload`, (event: BeforeUnloadEvent) => {
-    event.preventDefault();
-    event.returnValue = ``;
-  });
-
   promptStates.subscribe((promptStates) => {
     const result = promptStates
       .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
@@ -46,6 +43,23 @@ const names: { [K in Category]: string } = {
     const code = document.querySelector(`#output-prompt`)!;
     code.textContent = result;
   });
+
+  // Enable scripts only production mode.
+  class BeforeUnloadScript extends HTMLElement {
+    constructor() {
+      super();
+
+      const isProduction = this.dataset.prod === ``;
+      if (isProduction) {
+        window.addEventListener(`beforeunload`, (event: BeforeUnloadEvent) => {
+          event.preventDefault();
+          event.returnValue = ``;
+        });
+      }
+    }
+  }
+
+  customElements.define(`before-unload-script`, BeforeUnloadScript);
 </script>
 
 <style>
