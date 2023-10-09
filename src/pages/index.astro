@@ -18,7 +18,7 @@ const names: { [K in Category]: string } = {
   eyelashes: `睫毛`,
   hairLengths: `髪の長さ`,
   hairStyles: `髪型`,
-};
+} as const;
 
 const n = allCategories.length;
 const colors: { [K in Category]: string } = {
@@ -28,7 +28,7 @@ const colors: { [K in Category]: string } = {
   eyelashes: `hsl(${(3 * 360) / n}deg 100% 50% / 30%)`,
   hairLengths: `hsl(${(4 * 360) / n}deg 100% 50% / 30%)`,
   hairStyles: `hsl(${(5 * 360) / n}deg 100% 50% / 30%)`,
-};
+} as const;
 ---
 
 <Layout {...layoutInfo}>
