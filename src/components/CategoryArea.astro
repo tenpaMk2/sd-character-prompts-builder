@@ -14,18 +14,47 @@ const categoryFiltered = promptStates
 const prompts = categoryFiltered.map(({ prompt }) => prompt);
 ---
 
-<section class="wrapper">
+<category-area data-key={key}>
   <header>
     <h2>{name}</h2>
-    <button type="button">Clear</button>
+    <button class="clear-button" type="button">Clear</button>
   </header>
   <div class="prompts">
     {prompts.map((prompt) => <PromptButton key={prompt} />)}
   </div>
-</section>
+</category-area>
+
+<script>
+  import { promptStates, type Category } from "../store";
+
+  class CategoryArea extends HTMLElement {
+    constructor() {
+      super();
+
+      const key = this.dataset.key as Category;
+      if (!key) return;
+
+      const clearButton = this.querySelector(
+        `:scope > header > .clear-button`,
+      )!;
+
+      clearButton.addEventListener(`click`, () => {
+        const all = promptStates.get();
+        const categoryMatches = all.filter(({ category }) => category === key);
+        for (const r of categoryMatches) {
+          r.isEnable = false;
+        }
+
+        promptStates.set([...all]);
+      });
+    }
+  }
+
+  customElements.define(`category-area`, CategoryArea);
+</script>
 
 <style>
-  .wrapper {
+  category-area {
     padding: 1rem;
     background-color: rgb(var(--background-sub));
     border-radius: 1rem;
