@@ -39,12 +39,16 @@ const colors: { [K in Category]: string } = {
       <CategoryArea name={names[category]} key={category} />
     ))
   }
-  <pre
-    id="prompt-output">
-    {allCategories.map((category) => 
-      (<code class={category} style={`background-color:${colors[category]}`} />)
-      )}
-  </pre>
+  <section>
+    <h2>出力</h2>
+    <div>
+      <pre
+        id="prompts-output">{allCategories.map((category) => 
+          (<code class={category} style={`background-color:${colors[category]}`} />)
+          )}</pre>
+      <button id="prompts-copy-button">📋</button>
+    </div>
+  </section>
 </Layout>
 
 <script>
@@ -59,7 +63,7 @@ const colors: { [K in Category]: string } = {
         .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
         .join(``);
 
-      const code = document.querySelector(`#prompt-output > .${category}`)!;
+      const code = document.querySelector(`#prompts-output > .${category}`)!;
       code.textContent = resultPrompts;
     }
   });
@@ -80,17 +84,39 @@ const colors: { [K in Category]: string } = {
   }
 
   customElements.define(`before-unload-script`, BeforeUnloadScript);
+
+  const button = document.querySelector(
+    `#prompts-copy-button`,
+  )! as HTMLButtonElement;
+  const pre = document.querySelector(`#prompts-output`)! as HTMLPreElement;
+
+  button.addEventListener(`click`, () => {
+    navigator.clipboard.writeText(pre.textContent!);
+    button.classList.add(`transition`);
+  });
+  button.addEventListener(`transitioncancel`, () =>
+    button.classList.remove(`transition`),
+  );
+  button.addEventListener(`transitionend`, () =>
+    button.classList.remove(`transition`),
+  );
 </script>
 
 <style>
-  div {
-    padding: 1em;
-    background-color: rgb(100% 100% 100% / 0.05);
+  section {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+    background-color: rgb(var(--background-sub));
     border-radius: 1rem;
+    padding: 1rem;
+  }
+
+  div {
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
-    gap: 1em;
+    gap: 1rem;
+    align-items: center;
   }
 
   pre {
@@ -98,5 +124,20 @@ const colors: { [K in Category]: string } = {
     border-radius: 1rem;
     padding: 1rem;
     white-space: pre-wrap;
+    flex: 1 1 0;
+  }
+
+  button {
+    flex: 0 0 3rem;
+    aspect-ratio: 1 / 1;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition-duration: 200ms;
+    rotate: 0deg;
+  }
+
+  .transition {
+    rotate: 360deg;
   }
 </style>
