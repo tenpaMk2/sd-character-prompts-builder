@@ -1,7 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Category from "../components/Category.astro";
+import CategoryArea from "../components/CategoryArea.astro";
 import { tabInfos, type TabKeys } from "../components/Tabs.astro";
+import { allCategories, type Category } from "../store";
 
 const tabKey: TabKeys = `main`;
 const tabName = tabInfos[tabKey].ja;
@@ -9,18 +10,23 @@ const layoutInfo = {
   tabKey,
   tabName,
 };
+
+const names: { [K in Category]: string } = {
+  eyesColors: `目の色`,
+  eyesShapes: `目の形状`,
+  eyebrows: `眉毛`,
+  eyelashes: `睫毛`,
+  hairLengths: `髪の長さ`,
+  hairStyles: `髪型`,
+};
 ---
 
 <Layout {...layoutInfo}>
-  <Category name="目の色" key="eyesColors" />
-  <Category name="目の形状" key="eyesShapes" />
-  <Category name="眉毛" key="eyebrows" />
-  <Category name="睫毛" key="eyelashes" />
-  <Category name="髪の長さ" key="hairLengths" />
-  <Category name="髪型" key="hairStyles" />
-  <!-- <Category name="髪結び目">
-    <PromptButton key="bow-shaped hair" />
-  </Category> -->
+  {
+    allCategories.map((category) => (
+      <CategoryArea name={names[category]} key={category} />
+    ))
+  }
   <pre><code /></pre>
 </Layout>
 

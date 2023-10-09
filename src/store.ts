@@ -201,8 +201,12 @@ const initialStates = [
 export const promptStates = atom(initialStates);
 export type PromptStates = typeof initialStates;
 
-const categories = initialStates.map(({ category }) => category);
-export type Category = (typeof categories)[number];
+export const allCategories = [
+  ...new Set(initialStates.map(({ category }) => category)),
+];
+export type Category = (typeof allCategories)[number];
 
-const prompts = initialStates.map(({ prompt }) => prompt);
-export type Prompt = (typeof prompts)[number];
+export const allPrompts = [
+  ...new Set(initialStates.map(({ prompt }) => prompt)),
+];
+export type Prompt = (typeof allPrompts)[number];
