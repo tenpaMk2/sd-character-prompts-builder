@@ -7,66 +7,17 @@ const tabKey: TabKeys = `main`;
 const tabName = tabInfos[tabKey].ja;
 const layoutInfo = {
   tabKey,
-  tabName,
   title: `Welcome to Astro. | ${tabName}`,
 };
 ---
 
 <Layout {...layoutInfo}>
-  <Category
-    name="目の色"
-    prompts={[
-      `aqua eyes`,
-      `black eyes`,
-      `blue eyes`,
-      `brown eyes`,
-      `green eyes`,
-      `grey eyes`,
-      `orange eyes`,
-      `purple eyes`,
-      `pink eyes`,
-      `red eyes`,
-      `white eyes`,
-      `yellow eyes`,
-    ]}
-  />
-  <Category name="目の形状" prompts={[`tsurime`, `tareme`]} />
-  <Category name="眉毛" prompts={[`thick eyebrows`]} />
-  <Category
-    name="睫毛"
-    prompts={[`eyelashes`, `long eyelashes`, `thick eyelashes`]}
-  />
-  <Category
-    name="髪の長さ"
-    prompts={[
-      `short hair`,
-      `medium hair`,
-      `long hair`,
-      `very long hair`,
-      `absurdly long hair`,
-    ]}
-  />
-  <Category
-    name="髪型"
-    prompts={[
-      `bob cut`,
-      `inverted bob`,
-      `pixie cut`,
-      `undercut`,
-      `flipped hair`,
-      `dreadlocks`,
-      `hime cut`,
-      `curly hair`,
-      `drill hair`,
-      `twin drills`,
-      `hair flaps`,
-      `messy hair`,
-      `pointy hair`,
-      `ringlets`,
-      `straight hair`,
-      `wavy hair`,
-    ]}
-  />
+  <Category name="目の色" key="eyesColors" />
+  <Category name="目の形状" key="eyesShapes" />
+  <Category name="眉毛" key="eyebrows" />
+  <Category name="睫毛" key="eyelashes" />
+  <Category name="髪の長さ" key="hairLengths" />
+  <Category name="髪型" key="hairStyles" />
   <!-- <Category name="髪結び目">
     <PromptButton key="bow-shaped hair" />
   </Category> -->
@@ -74,13 +25,11 @@ const layoutInfo = {
 </Layout>
 
 <script>
-  import { promptState, prompts } from "../store";
+  import { promptStates } from "../store";
 
-  promptState.subscribe((promptState) => {
-    const result = prompts
-      .map((p) => {
-        return promptState[p] ? `${p}, ` : ``;
-      })
+  promptStates.subscribe((promptStates) => {
+    const result = promptStates
+      .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
       .join(``);
 
     const code = document.querySelector(`code`)!;

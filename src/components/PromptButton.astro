@@ -1,8 +1,8 @@
 ---
-import type { PromptState } from "../store";
+import type { Prompt } from "../store";
 
 interface Props {
-  key: keyof PromptState;
+  key: Prompt;
 }
 
 const { key } = Astro.props;
@@ -13,21 +13,27 @@ const { key } = Astro.props;
 </prompt-button>
 
 <script>
-  import { promptState, type PromptState } from "../store";
+  import { type Prompt, promptStates } from "../store";
 
   class PromptButton extends HTMLElement {
     constructor() {
       super();
 
-      const key = this.dataset.key as keyof PromptState;
+      const key = this.dataset.key as Prompt;
       if (!key) return;
 
-      this.addEventListener(`click`, () =>
-        promptState.setKey(key, !promptState.get()[key]),
-      );
+      this.addEventListener(`click`, () => {
+        const p = promptStates.get();
+        const filtered = p.filter(({ prompt }) => prompt === key);
 
-      promptState.subscribe((promptState) => {
-        if (promptState[key]) {
+        filtered[0].isEnable = !filtered[0].isEnable;
+        promptStates.set([...p]);
+      });
+
+      promptStates.subscribe((p) => {
+        const row = p.filter(({ prompt }) => prompt === key)[0];
+
+        if (row.isEnable) {
           this.classList.add(`enable`);
         } else {
           this.classList.remove(`enable`);

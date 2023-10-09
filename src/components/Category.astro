@@ -1,12 +1,17 @@
 ---
-import { prompts as promptCandidates } from "../store";
+import { type Category, promptStates } from "../store";
 import PromptButton from "./PromptButton.astro";
 interface Props {
   name: string;
-  prompts: (typeof promptCandidates)[number][];
+  key: Category;
 }
 
-const { name, prompts } = Astro.props;
+const { name, key } = Astro.props;
+
+const categoryFiltered = promptStates
+  .get()
+  .filter(({ category }) => category === key);
+const prompts = categoryFiltered.map(({ prompt }) => prompt);
 ---
 
 <section class="wrapper">
