@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import CategoryArea from "../components/CategoryArea.astro";
 import { tabInfos, type TabKeys } from "../components/Tabs.astro";
 import { allCategories, type Category } from "../store";
+import OutputArea from "../components/OutputArea.astro";
 
 const tabKey: TabKeys = `main`;
 const tabName = tabInfos[tabKey].ja;
@@ -19,16 +20,6 @@ const names: { [K in Category]: string } = {
   hairLengths: `髪の長さ`,
   hairStyles: `髪型`,
 } as const;
-
-const n = allCategories.length;
-const colors: { [K in Category]: string } = {
-  eyesColors: `hsl(${(0 * 360) / n}deg 100% 50% / 30%)`,
-  eyesShapes: `hsl(${(1 * 360) / n}deg 100% 50% / 30%)`,
-  eyebrows: `hsl(${(2 * 360) / n}deg 100% 50% / 30%)`,
-  eyelashes: `hsl(${(3 * 360) / n}deg 100% 50% / 30%)`,
-  hairLengths: `hsl(${(4 * 360) / n}deg 100% 50% / 30%)`,
-  hairStyles: `hsl(${(5 * 360) / n}deg 100% 50% / 30%)`,
-} as const;
 ---
 
 <Layout {...layoutInfo}>
@@ -39,35 +30,10 @@ const colors: { [K in Category]: string } = {
       <CategoryArea name={names[category]} key={category} />
     ))
   }
-  <section>
-    <h2>出力</h2>
-    <div>
-      <pre
-        id="prompts-output">{allCategories.map((category) => 
-          (<code class={category} style={`background-color:${colors[category]}`} />)
-          )}</pre>
-      <button id="prompts-copy-button">📋</button>
-    </div>
-  </section>
+  <OutputArea />
 </Layout>
 
 <script>
-  import { allCategories, promptStates } from "../store";
-
-  promptStates.subscribe((promptStates) => {
-    for (const category of allCategories) {
-      const categoryMatches = promptStates.filter(
-        ({ category: c }) => c === category,
-      );
-      const resultPrompts = categoryMatches
-        .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
-        .join(``);
-
-      const code = document.querySelector(`#prompts-output > .${category}`)!;
-      code.textContent = resultPrompts;
-    }
-  });
-
   // Enable scripts only production mode.
   class BeforeUnloadScript extends HTMLElement {
     constructor() {
@@ -84,60 +50,4 @@ const colors: { [K in Category]: string } = {
   }
 
   customElements.define(`before-unload-script`, BeforeUnloadScript);
-
-  const button = document.querySelector(
-    `#prompts-copy-button`,
-  )! as HTMLButtonElement;
-  const pre = document.querySelector(`#prompts-output`)! as HTMLPreElement;
-
-  button.addEventListener(`click`, () => {
-    navigator.clipboard.writeText(pre.textContent!);
-    button.classList.add(`transition`);
-  });
-  button.addEventListener(`transitioncancel`, () =>
-    button.classList.remove(`transition`),
-  );
-  button.addEventListener(`transitionend`, () =>
-    button.classList.remove(`transition`),
-  );
 </script>
-
-<style>
-  section {
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 1rem;
-    background-color: rgb(var(--background-sub));
-    border-radius: 1rem;
-    padding: 1rem;
-  }
-
-  div {
-    display: flex;
-    flex-flow: row wrap;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  pre {
-    background-color: rgb(10% 10% 10%);
-    border-radius: 1rem;
-    padding: 1rem;
-    white-space: pre-wrap;
-    flex: 1 1 0;
-  }
-
-  button {
-    flex: 0 0 3rem;
-    aspect-ratio: 1 / 1;
-    border-radius: 9999px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition-duration: 200ms;
-    rotate: 0deg;
-  }
-
-  .transition {
-    rotate: 360deg;
-  }
-</style>
