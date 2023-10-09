@@ -22,6 +22,11 @@ const prompts = categoryFiltered.map(({ prompt }) => prompt);
   <div class="prompts">
     {prompts.map((prompt) => <PromptButton key={prompt} />)}
   </div>
+  <div class="mupltiple-enables-warning">
+    <p>
+      2個以上のpromptが有効になっています。意図したものであればこの警告は無視してください。
+    </p>
+  </div>
 </category-area>
 
 <script>
@@ -46,6 +51,20 @@ const prompts = categoryFiltered.map(({ prompt }) => prompt);
         }
 
         promptStates.set([...all]);
+      });
+
+      const multipleEnablesWarning = this.querySelector(
+        `:scope > .mupltiple-enables-warning`,
+      )!;
+
+      promptStates.subscribe((all) => {
+        const categoryMatches = all.filter(({ category }) => category === key);
+        const enables = categoryMatches.filter(({ isEnable }) => isEnable);
+        if (2 <= enables.length) {
+          multipleEnablesWarning.classList.remove(`hide`);
+        } else {
+          multipleEnablesWarning.classList.add(`hide`);
+        }
       });
     }
   }
@@ -82,5 +101,35 @@ const prompts = categoryFiltered.map(({ prompt }) => prompt);
   button {
     padding: 0.4rem;
     border-radius: 9999px;
+  }
+
+  .mupltiple-enables-warning {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0.5rem;
+    align-items: center;
+    border-radius: 1rem;
+    background-color: hsl(40deg 100% 50% / 40%);
+    padding: 0.5rem;
+  }
+
+  .mupltiple-enables-warning::before {
+    content: "!";
+    display: inline-flex;
+    border: 1px solid rgb(var(--text-main));
+    border-radius: 9999px;
+    aspect-ratio: 1/1;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 2rem;
+    font-size: 1.2rem;
+  }
+
+  .mupltiple-enables-warning > p {
+    flex: 1 1 0;
+  }
+
+  .hide {
+    display: none;
   }
 </style>
