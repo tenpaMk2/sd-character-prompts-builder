@@ -10,7 +10,10 @@ const { name, prompts } = Astro.props;
 ---
 
 <section class="wrapper">
-  <h2>{name}</h2>
+  <header>
+    <h2>{name}</h2>
+    <button type="button">Clear</button>
+  </header>
   <div class="prompts">
     {prompts.map((prompt) => <PromptButton key={prompt} />)}
   </div>
@@ -22,7 +25,7 @@ const { name, prompts } = Astro.props;
     background-color: rgb(var(--background-sub));
     border-radius: 1rem;
     display: flex;
-    flex-flow: column;
+    flex-flow: column nowrap;
     gap: 0.8rem;
   }
 
@@ -32,7 +35,18 @@ const { name, prompts } = Astro.props;
     gap: 0.5rem;
   }
 
-  h1 {
+  header {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1rem;
+  }
+
+  h2 {
     font-size: 1.5rem;
+  }
+
+  button {
+    padding: 0.4rem;
+    border-radius: 9999px;
   }
 </style>
