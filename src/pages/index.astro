@@ -33,6 +33,11 @@ const names: { [K in Category]: string } = {
 <script>
   import { promptStates } from "../store";
 
+  window.addEventListener(`beforeunload`, (event: BeforeUnloadEvent) => {
+    event.preventDefault();
+    event.returnValue = ``;
+  });
+
   promptStates.subscribe((promptStates) => {
     const result = promptStates
       .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
