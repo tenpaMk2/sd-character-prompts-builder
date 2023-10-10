@@ -1,23 +1,32 @@
 ---
 import { allCategories, type Category } from "../store";
+import SliderButton from "./SliderButton.astro";
 
 const n = allCategories.length;
-const colors: { [K in Category]: string } = {
+const colors: { readonly [K in Category]: string } = {
   eyesColors: `hsl(${(0 * 360) / n}deg 100% 50% / 30%)`,
   eyesShapes: `hsl(${(1 * 360) / n}deg 100% 50% / 30%)`,
   eyebrows: `hsl(${(2 * 360) / n}deg 100% 50% / 30%)`,
   eyelashes: `hsl(${(3 * 360) / n}deg 100% 50% / 30%)`,
   hairLengths: `hsl(${(4 * 360) / n}deg 100% 50% / 30%)`,
   hairStyles: `hsl(${(5 * 360) / n}deg 100% 50% / 30%)`,
-} as const;
+};
 ---
 
-<section>
-  <h2>出力</h2>
-  <div>
+<section class="flex-column">
+  <header>
+    <h2>出力</h2>
+  </header>
+  <div class="flex-column">
+    <div class="flex-row">
+      <p>1行出力</p>
+      <SliderButton key="oneLine" />
+    </div>
+  </div>
+  <div class="flex-row">
     <pre
       id="prompts-output">{allCategories.map((category) => 
-        (<code class={category} style={`background-color:${colors[category]}`} />)
+        (<code class={category} style={`background-color:${colors[category]}`} /><br class="line-break" />)
         )}</pre>
     <button id="prompts-copy-button">📋</button>
   </div>
@@ -25,8 +34,20 @@ const colors: { [K in Category]: string } = {
 
 <script>
   import { allCategories, promptStates } from "../store";
+  import { sliderButtonStoreMap } from "../libs/slider-button-store";
+  import { computed } from "nanostores";
 
-  promptStates.subscribe((promptStates) => {
+  const oneLineStore = sliderButtonStoreMap.get(`oneLine`)!;
+
+  const outputMaterials = computed(
+    [oneLineStore, promptStates],
+    (isOneLine, promptStates) => ({
+      isOneLine,
+      promptStates,
+    }),
+  );
+
+  outputMaterials.subscribe(({ isOneLine, promptStates }) => {
     for (const category of allCategories) {
       const categoryMatches = promptStates.filter(
         ({ category: c }) => c === category,
@@ -37,6 +58,13 @@ const colors: { [K in Category]: string } = {
 
       const code = document.querySelector(`#prompts-output > .${category}`)!;
       code.textContent = resultPrompts;
+    }
+
+    const brs: NodeListOf<HTMLBRElement> = document.querySelectorAll(
+      `#prompts-output > .line-break`,
+    );
+    for (const br of brs) {
+      br.style.display = isOneLine ? `none` : `unset`;
     }
   });
 
@@ -58,20 +86,27 @@ const colors: { [K in Category]: string } = {
 </script>
 
 <style>
-  section {
+  .flex-row {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .flex-column {
     display: flex;
     flex-flow: column nowrap;
     gap: 1rem;
+  }
+
+  section {
     background-color: rgb(var(--background-sub));
     border-radius: 1rem;
     padding: 1rem;
   }
 
-  div {
-    display: flex;
-    flex-flow: row wrap;
-    gap: 1rem;
-    align-items: center;
+  h2 {
+    font-size: 1.5rem;
   }
 
   pre {
