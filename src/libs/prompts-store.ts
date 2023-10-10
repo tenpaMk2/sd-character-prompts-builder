@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
 
-const initialStates = [
+const promptRecords = [
   {
     category: `eyesColors` as const,
     prompt: `aqua eyes` as const,
@@ -198,15 +198,15 @@ const initialStates = [
   },
 ];
 
-export const promptStates = atom(initialStates);
-export type PromptStates = typeof initialStates;
+export const promptRecordsStore = atom(promptRecords);
+export type PromptRecords = typeof promptRecords;
 
 export const allCategories = [
-  ...new Set(initialStates.map(({ category }) => category)),
+  ...new Set(promptRecords.map(({ category }) => category)),
 ];
 export type Category = (typeof allCategories)[number];
 
 export const allPrompts = [
-  ...new Set(initialStates.map(({ prompt }) => prompt)),
+  ...new Set(promptRecords.map(({ prompt }) => prompt)),
 ];
 export type Prompt = (typeof allPrompts)[number];

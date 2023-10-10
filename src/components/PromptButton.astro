@@ -1,5 +1,5 @@
 ---
-import type { Prompt } from "../store";
+import type { Prompt } from "../libs/prompts-store";
 
 interface Props {
   key: Prompt;
@@ -13,7 +13,7 @@ const { key } = Astro.props;
 </prompt-button>
 
 <script>
-  import { type Prompt, promptStates } from "../store";
+  import { type Prompt, promptRecordsStore } from "../libs/prompts-store";
 
   class PromptButton extends HTMLElement {
     constructor() {
@@ -23,17 +23,17 @@ const { key } = Astro.props;
       if (!key) return;
 
       this.addEventListener(`click`, () => {
-        const p = promptStates.get();
-        const filtered = p.filter(({ prompt }) => prompt === key);
+        const all = promptRecordsStore.get();
+        const record = all.filter(({ prompt }) => prompt === key)[0];
 
-        filtered[0].isEnable = !filtered[0].isEnable;
-        promptStates.set([...p]);
+        record.isEnable = !record.isEnable;
+        promptRecordsStore.set([...all]);
       });
 
-      promptStates.subscribe((p) => {
-        const row = p.filter(({ prompt }) => prompt === key)[0];
+      promptRecordsStore.subscribe((all) => {
+        const record = all.filter(({ prompt }) => prompt === key)[0];
 
-        if (row.isEnable) {
+        if (record.isEnable) {
           this.classList.add(`enable`);
         } else {
           this.classList.remove(`enable`);

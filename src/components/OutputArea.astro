@@ -1,5 +1,5 @@
 ---
-import { allCategories, type Category } from "../store";
+import { allCategories, type Category } from "../libs/prompts-store";
 import SliderButton from "./SliderButton.astro";
 
 const n = allCategories.length;
@@ -33,23 +33,23 @@ const colors: { readonly [K in Category]: string } = {
 </section>
 
 <script>
-  import { allCategories, promptStates } from "../store";
+  import { allCategories, promptRecordsStore } from "../libs/prompts-store";
   import { sliderButtonStoreMap } from "../libs/slider-button-store";
   import { computed } from "nanostores";
 
   const oneLineStore = sliderButtonStoreMap.get(`oneLine`)!;
 
   const outputMaterials = computed(
-    [oneLineStore, promptStates],
-    (isOneLine, promptStates) => ({
+    [oneLineStore, promptRecordsStore],
+    (isOneLine, promptRecords) => ({
       isOneLine,
-      promptStates,
+      promptRecords,
     }),
   );
 
-  outputMaterials.subscribe(({ isOneLine, promptStates }) => {
+  outputMaterials.subscribe(({ isOneLine, promptRecords }) => {
     for (const category of allCategories) {
-      const categoryMatches = promptStates.filter(
+      const categoryMatches = promptRecords.filter(
         ({ category: c }) => c === category,
       );
       const resultPrompts = categoryMatches
