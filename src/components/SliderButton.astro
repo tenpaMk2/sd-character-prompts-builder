@@ -25,14 +25,16 @@ const { key } = Astro.props;
       super();
 
       const key = this.dataset.key as SliderButtonKeys;
+      const store = sliderButtonStoreMap.get(key)!;
 
-      this.addEventListener(`click`, () => {
-        const input = this.querySelector(`:scope > input`)! as HTMLInputElement;
+      const input = this.querySelector(`:scope > input`)! as HTMLInputElement;
 
-        input.addEventListener(`change`, () => {
-          const store = sliderButtonStoreMap.get(key)!;
-          store.set(input.checked);
-        });
+      input.addEventListener(`change`, () => {
+        store.set(input.checked);
+      });
+
+      store.subscribe((isChecked) => {
+        input.checked = isChecked;
       });
     }
   }
