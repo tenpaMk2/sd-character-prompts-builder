@@ -1,4 +1,4 @@
-import { atom, computed, type WritableAtom } from "nanostores";
+import { atom, type WritableAtom } from "nanostores";
 
 export const sliderButtonKeys = [`oneLine`] as const;
 export type SliderButtonKeys = (typeof sliderButtonKeys)[number];
