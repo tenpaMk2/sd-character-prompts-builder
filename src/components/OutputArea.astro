@@ -3,14 +3,14 @@ import { allCategories, type Category } from "../libs/prompts-store";
 import SliderButton from "./SliderButton.astro";
 
 const n = allCategories.length;
-const colors: { readonly [K in Category]: string } = {
-  eyesColors: `hsl(${(0 * 360) / n}deg 100% 50% / 30%)`,
-  eyesShapes: `hsl(${(1 * 360) / n}deg 100% 50% / 30%)`,
-  eyebrows: `hsl(${(2 * 360) / n}deg 100% 50% / 30%)`,
-  eyelashes: `hsl(${(3 * 360) / n}deg 100% 50% / 30%)`,
-  hairLengths: `hsl(${(4 * 360) / n}deg 100% 50% / 30%)`,
-  hairStyles: `hsl(${(5 * 360) / n}deg 100% 50% / 30%)`,
-};
+const colorsMap = new Map(
+  allCategories.map((c, index) => [
+    c,
+    `hsl(${
+      (360 * index) / (2 * n) + (index % 2 === 0 ? 0 : 180)
+    }deg 100% 50% / 30%)`,
+  ]),
+);
 ---
 
 <section class="flex-column">
@@ -26,7 +26,7 @@ const colors: { readonly [K in Category]: string } = {
   <div class="flex-row">
     <pre
       id="prompts-output">{allCategories.map((category) => 
-        (<code class={category} style={`background-color:${colors[category]}`} /><br class="line-break" />)
+        (<code class={category} style={`background-color:${colorsMap.get(category)}`} /><br class="line-break" />)
         )}</pre>
     <button id="prompts-copy-button">📋</button>
   </div>
