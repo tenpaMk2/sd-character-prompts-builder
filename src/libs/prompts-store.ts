@@ -97,6 +97,97 @@ const promptRecords = [
     isEnable: false,
   },
   {
+    category: `hairColor` as const,
+    prompt: "aqua hair" as const, // may overlap with blue and green.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "black hair" as const, // may overlap with brown, blue and grey.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "blonde hair" as const, // may overlap with orange and brown.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "blue hair" as const, // may overlap with aqua and purple.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "light blue hair" as const, // may overlap with aqua.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "dark blue hair" as const, // may overlap with black.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "brown hair" as const, // may overlap with black, orange and red.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "light brown hair" as const, // may overlap with blonde and brown.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "green hair" as const, // may overlap with aqua.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "dark green hair" as const,
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "light green hair" as const,
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "grey hair" as const, // may overlap with white and black.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "orange hair" as const, // may overlap with brown and red.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "pink hair" as const, // may overlap with purple and red.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "purple hair" as const, // may overlap with blue and pink.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "light purple hair" as const, // may overlap with pink and purple.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "red hair" as const, // may overlap with orange and brown.
+    isEnable: false,
+  },
+  {
+    category: `hairColor` as const,
+    prompt: "white hair" as const, // may overlap with grey.
+    isEnable: false,
+  },
+
+  {
     category: `hairLengths` as const,
     prompt: `short hair` as const,
     isEnable: false,
@@ -783,6 +874,11 @@ const promptRecords = [
   },
   {
     category: `hairOrnament` as const,
+    prompt: `diadem` as const,
+    isEnable: false,
+  },
+  {
+    category: `hairOrnament` as const,
     prompt: `headdress` as const,
     isEnable: false,
   },
@@ -1047,6 +1143,31 @@ const promptRecords = [
   {
     category: `misc` as const,
     prompt: `dark skin` as const,
+    isEnable: false,
+  },
+  {
+    category: `misc` as const,
+    prompt: `single horn` as const,
+    isEnable: false,
+  },
+  {
+    category: `misc` as const,
+    prompt: `mature female` as const,
+    isEnable: false,
+  },
+  {
+    category: `misc` as const,
+    prompt: `single horn` as const,
+    isEnable: false,
+  },
+  {
+    category: `misc` as const,
+    prompt: `curvy` as const,
+    isEnable: false,
+  },
+  {
+    category: `misc` as const,
+    prompt: `loli` as const,
     isEnable: false,
   },
   {
