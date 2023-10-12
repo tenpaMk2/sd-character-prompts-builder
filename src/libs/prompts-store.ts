@@ -1049,6 +1049,31 @@ const promptRecords = [
     prompt: `dark skin` as const,
     isEnable: false,
   },
+  {
+    category: `breasts` as const,
+    prompt: `huge breasts` as const,
+    isEnable: false,
+  },
+  {
+    category: `breasts` as const,
+    prompt: `large breasts` as const,
+    isEnable: false,
+  },
+  {
+    category: `breasts` as const,
+    prompt: `medium breasts` as const,
+    isEnable: false,
+  },
+  {
+    category: `breasts` as const,
+    prompt: `small breasts` as const,
+    isEnable: false,
+  },
+  {
+    category: `breasts` as const,
+    prompt: `flat chest` as const,
+    isEnable: false,
+  },
 ];
 
 export const promptRecordsStore = atom(promptRecords);
