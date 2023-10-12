@@ -358,11 +358,6 @@ const promptRecords = [
   },
   {
     category: `tiedHair` as const,
-    prompt: `multi-tied hair` as const,
-    isEnable: false,
-  },
-  {
-    category: `tiedHair` as const,
     prompt: `ponytail` as const,
     isEnable: false,
   },
