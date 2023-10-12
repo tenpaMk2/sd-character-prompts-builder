@@ -8,14 +8,14 @@ interface Props {
 const { key } = Astro.props;
 ---
 
-<prompt-button data-key={key}>
+<button is="prompt-button" data-key={key}>
   {key}
-</prompt-button>
+</button>
 
 <script>
   import { type Prompt, promptRecordsStore } from "../libs/prompts-store";
 
-  class PromptButton extends HTMLElement {
+  class PromptButton extends HTMLButtonElement {
     constructor() {
       super();
 
@@ -42,18 +42,23 @@ const { key } = Astro.props;
     }
   }
 
-  customElements.define(`prompt-button`, PromptButton);
+  customElements.define(`prompt-button`, PromptButton, { extends: `button` });
 </script>
 
 <style>
-  prompt-button {
+  button {
     border: 1px solid rgb(var(--text-main));
+    color: rgb(var(--text-main));
+    font-size: 1rem;
     border-radius: 0.5rem;
     padding: 0.4rem;
     transition-duration: 200ms;
     cursor: pointer;
+    background-color: transparent;
+    outline: none;
+    appearance: none;
   }
-  prompt-button:hover {
+  button:hover {
     background-color: rgb(var(--accent-dark));
     transition-duration: 200ms;
   }
