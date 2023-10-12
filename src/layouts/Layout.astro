@@ -1,10 +1,10 @@
 ---
-import Tabs, { type TabKeys } from "../components/Tabs.astro";
+import Tabs, { type TabKey } from "../components/Tabs.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 
 interface Props {
   tabName: string;
-  tabKey: TabKeys;
+  tabKey: TabKey;
 }
 
 const { tabName, tabKey } = Astro.props;

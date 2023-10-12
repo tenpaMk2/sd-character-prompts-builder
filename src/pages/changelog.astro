@@ -1,9 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { tabInfos, type TabKeys } from "../components/Tabs.astro";
+import { tabNames, type TabKey } from "../components/Tabs.astro";
 
-const tabKey: TabKeys = `changelog`;
-const tabName = tabInfos[tabKey].ja;
+const tabKey: TabKey = `changelog`;
+const tabName = tabNames[tabKey];
 const layoutInfo = {
   tabKey,
   tabName,

@@ -1,12 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CategoryArea from "../components/CategoryArea.astro";
-import { tabInfos, type TabKeys } from "../components/Tabs.astro";
+import { tabNames, type TabKey } from "../components/Tabs.astro";
 import { allCategories, type Category } from "../libs/prompts-store";
 import OutputArea from "../components/OutputArea.astro";
 
-const tabKey: TabKeys = `main`;
-const tabName = tabInfos[tabKey].ja;
+const tabKey: TabKey = `main`;
+const tabName = tabNames[tabKey];
 const layoutInfo = {
   tabKey,
   tabName,

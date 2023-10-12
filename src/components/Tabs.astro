@@ -1,29 +1,15 @@
 ---
 export const tabKeys = [`main`, `usage`, `changelog`] as const;
-export type TabKeys = (typeof tabKeys)[number];
+export type TabKey = (typeof tabKeys)[number];
 
-type LocalName = {
-  ja: string;
-  en: string;
-};
-
-export const tabInfos: { [K in (typeof tabKeys)[number]]: LocalName } = {
-  main: {
-    ja: `メイン`,
-    en: `Main`,
-  },
-  usage: {
-    ja: `使い方`,
-    en: `Usage`,
-  },
-  changelog: {
-    ja: `更新履歴`,
-    en: `ChangeLog`,
-  },
+export const tabNames: { [K in (typeof tabKeys)[number]]: string } = {
+  main: `メイン`,
+  usage: `使い方`,
+  changelog: `更新履歴`,
 };
 
 interface Props {
-  selectedKey: TabKeys;
+  selectedKey: TabKey;
 }
 
 const { selectedKey } = Astro.props;
@@ -36,7 +22,7 @@ const { selectedKey } = Astro.props;
         href={`${import.meta.env.BASE_URL}${key === `main` ? `` : `${key}/`}`}
         class:list={[{ selected: key === selectedKey }]}
       >
-        <span>{tabInfos[key].ja}</span>
+        <span>{tabNames[key]}</span>
       </a>
     ))
   }
