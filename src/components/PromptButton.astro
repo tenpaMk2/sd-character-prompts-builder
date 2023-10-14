@@ -13,7 +13,7 @@ const { key } = Astro.props;
 </button>
 
 <script>
-  import { type Prompt, promptRecordsStore } from "../libs/prompts-store";
+  import { type Prompt, promptEnableInfoStore } from "../libs/prompts-store";
 
   class PromptButton extends HTMLButtonElement {
     constructor() {
@@ -23,17 +23,13 @@ const { key } = Astro.props;
       if (!key) return;
 
       this.addEventListener(`click`, () => {
-        const all = promptRecordsStore.get();
-        const record = all.filter(({ prompt }) => prompt === key)[0];
-
-        record.isEnable = !record.isEnable;
-        promptRecordsStore.set([...all]);
+        const isEnable = promptEnableInfoStore.get()[key];
+        promptEnableInfoStore.setKey(key, !isEnable);
       });
 
-      promptRecordsStore.subscribe((all) => {
-        const record = all.filter(({ prompt }) => prompt === key)[0];
-
-        if (record.isEnable) {
+      promptEnableInfoStore.subscribe((info) => {
+        const isEnable = info[key];
+        if (isEnable) {
           this.classList.add(`enable`);
         } else {
           this.classList.remove(`enable`);

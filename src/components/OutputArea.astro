@@ -33,27 +33,31 @@ const colorsMap = new Map(
 </section>
 
 <script>
-  import { allCategories, promptRecordsStore } from "../libs/prompts-store";
+  import {
+    allCategories,
+    promptEnableInfoStore,
+    promptDefines,
+  } from "../libs/prompts-store";
   import { sliderButtonStoreMap } from "../libs/slider-button-store";
   import { computed } from "nanostores";
 
   const oneLineStore = sliderButtonStoreMap.get(`oneLine`)!;
 
   const outputMaterials = computed(
-    [oneLineStore, promptRecordsStore],
-    (isOneLine, promptRecords) => ({
+    [oneLineStore, promptEnableInfoStore],
+    (isOneLine, promptEnableInfo) => ({
       isOneLine,
-      promptRecords,
+      promptEnableInfo,
     }),
   );
 
-  outputMaterials.subscribe(({ isOneLine, promptRecords }) => {
+  outputMaterials.subscribe(({ isOneLine, promptEnableInfo }) => {
     for (const category of allCategories) {
-      const categoryMatches = promptRecords.filter(
+      const categoryMatches = promptDefines.filter(
         ({ category: c }) => c === category,
       );
       const resultPrompts = categoryMatches
-        .map(({ prompt, isEnable }) => (isEnable ? `${prompt}, ` : ``))
+        .map(({ key, prompt }) => (promptEnableInfo[key] ? `${prompt}, ` : ``))
         .join(``);
 
       const code = document.querySelector(`#prompts-output > .${category}`)!;
