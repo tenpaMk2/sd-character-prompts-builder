@@ -1,14 +1,17 @@
 ---
-import { allCategories } from "../libs/prompts-store";
+import { categorySet } from "../libs/prompts-store";
 import SliderButton from "./SliderButton.astro";
 
-const n = allCategories.length;
-const colorsMap = new Map(
-  allCategories.map((c, index) => [
+const n = categorySet.size;
+const categoryInfo = new Map(
+  [...categorySet].map((c, index) => [
     c,
-    `hsl(${
-      (360 * index) / (2 * n) + (index % 2 === 0 ? 0 : 180)
-    }deg 100% 50% / 30%)`,
+    {
+      className: c.replace(` `, `-`),
+      color: `hsl(${
+        (360 * index) / (2 * n) + (index % 2 === 0 ? 0 : 180)
+      }deg 100% 50% / 30%)`,
+    },
   ]),
 );
 ---
@@ -25,18 +28,18 @@ const colorsMap = new Map(
   </div>
   <div class="flex-row">
     <pre
-      id="prompts-output">{allCategories.map((category) => 
-        (<code class={category} style={`background-color:${colorsMap.get(category)}`} /><br class="line-break" />)
-        )}</pre>
+      id="prompts-output">{[...categorySet].map((category) =>
+      (<code class={categoryInfo.get(category)?.className} style={`background-color:${categoryInfo.get(category)?.color}`} /><br class="line-break" />))
+        }</pre>
     <button id="prompts-copy-button">📋</button>
   </div>
 </section>
 
 <script>
   import {
-    allCategories,
+    categorySet,
     promptEnableInfoStore,
-    promptDefines,
+    getDefinesByCategory,
   } from "../libs/prompts-store";
   import { sliderButtonStoreMap } from "../libs/slider-button-store";
   import { computed } from "nanostores";
@@ -52,16 +55,14 @@ const colorsMap = new Map(
   );
 
   outputMaterials.subscribe(({ isOneLine, promptEnableInfo }) => {
-    for (const category of allCategories) {
-      const categoryMatches = promptDefines.filter(
-        ({ category: c }) => c === category,
-      );
-      const resultPrompts = categoryMatches
-        .map(({ key, prompt }) => (promptEnableInfo[key] ? `${prompt}, ` : ``))
+    for (const category of categorySet) {
+      const categoryDefines = getDefinesByCategory(category);
+      const categoryOutputs = categoryDefines
+        .map(({ prompt }) => (promptEnableInfo[prompt] ? `${prompt}, ` : ``))
         .join(``);
 
       const code = document.querySelector(`#prompts-output > .${category}`)!;
-      code.textContent = resultPrompts;
+      code.textContent = categoryOutputs;
     }
 
     const brs: NodeListOf<HTMLBRElement> = document.querySelectorAll(

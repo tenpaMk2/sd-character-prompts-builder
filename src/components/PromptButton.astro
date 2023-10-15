@@ -2,14 +2,14 @@
 import type { Prompt } from "../libs/prompts-store";
 
 interface Props {
-  key: Prompt;
+  prompt: Prompt;
 }
 
-const { key } = Astro.props;
+const { prompt } = Astro.props;
 ---
 
-<button is="prompt-button" data-key={key}>
-  {key}
+<button is="prompt-button" data-prompt={prompt}>
+  {prompt}
 </button>
 
 <script>
@@ -19,16 +19,16 @@ const { key } = Astro.props;
     constructor() {
       super();
 
-      const key = this.dataset.key as Prompt;
-      if (!key) return;
+      const prompt = this.dataset.prompt as Prompt;
+      if (!prompt) return;
 
       this.addEventListener(`click`, () => {
-        const isEnable = promptEnableInfoStore.get()[key];
-        promptEnableInfoStore.setKey(key, !isEnable);
+        const isEnable = promptEnableInfoStore.get()[prompt];
+        promptEnableInfoStore.setKey(prompt, !isEnable);
       });
 
       promptEnableInfoStore.subscribe((info) => {
-        const isEnable = info[key];
+        const isEnable = info[prompt];
         if (isEnable) {
           this.classList.add(`enable`);
         } else {

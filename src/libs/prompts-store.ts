@@ -1,97 +1,195 @@
 import { map } from "nanostores";
 
-// const record = {
-//   key: `hair red ribbon`, // 重複しないキー(プロンプトをキーにしてしまうと、別カテゴリで同じプロンプトを使う場合に破綻する)
-//   category: `hair-ornament`, // カテゴリキー(class名兼用なのでスペースなし)
-//   prompt: `red ribbon`, // プロンプト
-//   isEnableByDefault: true, // 初期値
-//   colorCategory: `eyes-color`, // カラー系のプロンプト用
-//   colorClass: `aqua`, // カラー系のプロンプト用(class名兼用)
-//   suggestKeys: [`blue eyes`, `green eyes`], // 一緒に有効にしたほうが良いプロンプトのサジェスト
-//   parentKey: `ponytail`, // 親プロンプト(これが指定される場合は、親カテゴリごとにUIをグルーピングする)
-// };
-
 export const promptDefines = [
   {
-    key: `aqua eyes`,
-    category: `eyes-color`,
     prompt: `aqua eyes`,
+    categories: [`eyes-color`],
     isEnableByDefault: false,
-    colorCategory: `eyes-color`,
+    colorCategory: `common-color`,
     color: `aqua`,
+    suggests: null,
+    parent: null,
   },
   {
-    key: `red eyes`,
-    category: `eyes-color`,
     prompt: `red eyes`,
+    categories: [`eyes-color`],
     isEnableByDefault: true,
-    colorCategory: `eyes-color`,
+    colorCategory: `common-color`,
     color: `red`,
+    suggests: null,
+    parent: null,
   },
   {
-    key: `black eyes`,
-    category: `eyes-color`,
     prompt: `black eyes`,
+    categories: [`eyes-color`],
     isEnableByDefault: false,
-    colorCategory: `eyes-color`,
+    colorCategory: `common-color`,
     color: `black`,
+    suggests: null,
+    parent: null,
   },
   {
-    key: `thick eyebrows`,
-    category: `eyebrows-shape`,
     prompt: `thick eyebrows`,
+    categories: [`eyebrows-shape`],
     isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: null,
   },
   {
-    key: `ponytail`,
-    category: `tied-hair`,
     prompt: `ponytail`,
+    categories: [`tied-hair`],
     isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: null,
   },
   {
-    key: `high ponytail`,
-    category: `tied-hair`,
     prompt: `high ponytail`,
+    categories: [`tied-hair`],
     isEnableByDefault: false,
-    parentKey: `ponytail`,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: `ponytail`,
+  },
+  {
+    prompt: `hairpin`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `hairclip`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `cross hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: [`hairpin`],
+    parent: `hair ornament`,
+  },
+  {
+    prompt: `x hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: [`hairpin`],
+    parent: `hair ornament`,
+  },
+  {
+    prompt: `snowflake hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: `hair ornament`,
+  },
+  {
+    prompt: `bat hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: `hair ornament`,
+  },
+  {
+    prompt: `anchor hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: `hair ornament`,
+  },
+  {
+    prompt: `bone hair ornament`,
+    categories: [`hair-ornament`],
+    isEnableByDefault: false,
+    colorCategory: null,
+    color: null,
+    suggests: null,
+    parent: `hair ornament`,
   },
 ] as const;
 
-// TODO: keyが重複してたらはじく。
-// TODO: categoryにスペースが入ってたらはじく。
-// TODO: いっそJSON(or JS)に隔離したほうが良いかも。
+const prompts = promptDefines.map(({ prompt }) => prompt);
+const promptSetMutable = new Set(prompts);
+export type Prompt = (typeof prompts)[number];
+export const promptSet = promptSetMutable as ReadonlySet<Prompt>;
 
-// const rec = inputs.map(({ category, prompt }) => `${category}=>${prompt}`);
+const categories = promptDefines.map(({ categories }) => categories).flat();
+export type Category = (typeof categories)[number];
+export const categorySet = new Set(categories) as ReadonlySet<Category>;
 
-// const promptRecordsStoreH = atom(hoge);
-// type PromptRecordsH = typeof hoge;
+const colorCategories = promptDefines.map(({ colorCategory }) => colorCategory);
+export type ColorCategory = Exclude<(typeof colorCategories)[number], null>;
+const colorCategoryNullableSet = new Set(colorCategories);
+colorCategoryNullableSet.delete(null);
+export const colorCategorySet =
+  colorCategoryNullableSet as ReadonlySet<ColorCategory>;
 
-// const allCategoriesH = [...new Set(hoge.map(({ category }) => category))];
-// type CategoryH = (typeof allCategoriesH)[number];
+const parents = promptDefines.map(({ parent }) => parent);
+export type Parent = Exclude<(typeof parents)[number], null>;
+const parentNullableSet = new Set(parents);
+parentNullableSet.delete(null);
+export const parentSet = parentNullableSet as ReadonlySet<Parent>;
 
-// const allPromptsH = [...new Set(hoge.map(({ prompt }) => prompt))];
-// type PromptH = (typeof allPromptsH)[number];
-
-export const allCategories = [
-  ...new Set(promptDefines.map(({ category }) => category)),
-];
-export type Category = (typeof allCategories)[number];
-
-const allPrompts = [...new Set(promptDefines.map(({ prompt }) => prompt))];
-export type Prompt = (typeof allPrompts)[number];
-
-type PromptEnableInfo = {
-  [K in (typeof allPrompts)[number]]: boolean;
-};
-
+type PromptEnableInfo = { [K in Prompt]: boolean };
 const defaultInfo = promptDefines.reduce(
-  (a, { key, isEnableByDefault }) => ({ ...a, [key]: isEnableByDefault }),
+  (a, { prompt, isEnableByDefault }) => ({ ...a, [prompt]: isEnableByDefault }),
   {},
 ) as PromptEnableInfo;
 
 export const promptEnableInfoStore = map<PromptEnableInfo>(defaultInfo);
 
-export const getPromptsByCategory = (c: Category) =>
-  promptDefines
-    .filter(({ category }) => category === c)
-    .map(({ prompt }) => prompt);
+export const getDefine = (p: Prompt) =>
+  promptDefines.filter(({ prompt }) => prompt === p)[0];
+
+export const getDefinesByCategory = (c: Category) =>
+  promptDefines.filter(({ categories }) =>
+    (categories as readonly Category[]).includes(c),
+  );
+
+export const getDefinesByColorCategory = (c: ColorCategory) =>
+  promptDefines.filter(({ colorCategory }) => colorCategory === c);
+
+export const getDefinesHaveChildren = () =>
+  promptDefines.filter(({ prompt }) => (parentSet as Set<unknown>).has(prompt));
+
+export const getDefinesHaveParent = () =>
+  promptDefines.filter(({ parent }) => parent);
+
+export const getChildDefines = (parent: Prompt) =>
+  promptDefines.filter(({ parent: p }) => p === parent);
+
+export const getParentDefine = (child: Prompt) => {
+  const childDefine = getDefine(child);
+  if (!childDefine.parent) return null;
+  return getDefine(childDefine.parent);
+};

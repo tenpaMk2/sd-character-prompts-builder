@@ -1,0 +1,100 @@
+---
+import { getChildDefines, type Prompt } from "../libs/prompts-store";
+import PromptButton from "./PromptButton.astro";
+
+interface Props {
+  parentPrompt: Prompt;
+}
+
+const { parentPrompt } = Astro.props;
+
+const childPrompts = getChildDefines(parentPrompt).map(({ prompt }) => prompt);
+
+console.log(`---parentPrompt=${parentPrompt}---`);
+for (const c of childPrompts) {
+  console.log(c);
+}
+---
+
+<parent-prompt data-parent={parentPrompt}>
+  <button class="bar">{parentPrompt}</button>
+  <div class="prompts-container hide">
+    {childPrompts.map((childPrompt) => <PromptButton prompt={childPrompt} />)}
+  </div>
+</parent-prompt>
+
+<script>
+  import { promptEnableInfoStore, type Prompt } from "../libs/prompts-store";
+
+  class ParentPrompt extends HTMLElement {
+    constructor() {
+      super();
+
+      const parentPrompt = this.dataset.parent as Prompt;
+      if (!parentPrompt) return;
+
+      const bar = this.querySelector(`button`)!;
+      const promptsContainer = this.querySelector(
+        `.prompts-container`,
+      )! as HTMLDivElement;
+
+      console.log(bar);
+      console.log(promptsContainer);
+
+      bar.addEventListener(`click`, () => {
+        const isEnable = promptEnableInfoStore.get()[parentPrompt];
+        promptEnableInfoStore.setKey(parentPrompt, !isEnable);
+      });
+
+      promptEnableInfoStore.subscribe((info) => {
+        const isEnable = info[parentPrompt];
+        console.log(`hohoho`);
+        console.log(isEnable);
+        if (isEnable) {
+          this.classList.add(`opening`);
+        } else {
+          this.classList.remove(`opening`);
+        }
+      });
+    }
+  }
+
+  customElements.define(`parent-prompt`, ParentPrompt);
+</script>
+
+<style>
+  button {
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    padding: 0.4rem;
+    cursor: pointer;
+    background-color: transparent;
+    outline: none;
+    appearance: none;
+    color: inherit;
+    border-color: rgb(var(--text-main));
+    width: 100%;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  parent-prompt {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+  }
+
+  .opening > .bar {
+    background-color: rgb(var(--accent));
+    color: rgb(var(--text-main));
+  }
+
+  .opening > .prompts-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-auto-flow: row dense;
+  }
+</style>

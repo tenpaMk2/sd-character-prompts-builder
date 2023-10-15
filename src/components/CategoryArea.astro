@@ -1,26 +1,44 @@
 ---
-import { type Category, promptDefines } from "../libs/prompts-store";
+import {
+  type Category,
+  getDefinesByCategory,
+  getDefinesHaveChildren,
+  getDefinesHaveParent,
+} from "../libs/prompts-store";
+import ParentPrompt from "./ParentPrompt.astro";
 import PromptButton from "./PromptButton.astro";
 interface Props {
   name: string;
-  key: Category;
+  category: Category;
 }
 
-const { name, key } = Astro.props;
+const { name, category } = Astro.props;
 
-const categoryMatches = promptDefines.filter(
-  ({ category }) => category === key,
-);
-const prompts = categoryMatches.map(({ prompt }) => prompt);
+const categoryDefines = getDefinesByCategory(category);
+const parentDefines = getDefinesHaveChildren();
+const childDefines = getDefinesHaveParent();
+const buttonDefines = categoryDefines.filter((x) => !childDefines.includes(x));
+
+for (const hoge of buttonDefines) {
+  console.log(hoge);
+}
 ---
 
-<category-area data-key={key}>
+<category-area data-category={category}>
   <header>
     <h2>{name}</h2>
     <button class="clear-button" type="button">Clear</button>
   </header>
   <div class="prompts">
-    {prompts.map((prompt) => <PromptButton key={prompt} />)}
+    {
+      buttonDefines.map((x) =>
+        parentDefines.includes(x) ? (
+          <ParentPrompt parentPrompt={x.prompt} />
+        ) : (
+          <PromptButton prompt={x.prompt} />
+        ),
+      )
+    }
   </div>
   <div class="mupltiple-enables-warning hide">
     <p>
@@ -34,28 +52,24 @@ const prompts = categoryMatches.map(({ prompt }) => prompt);
     promptEnableInfoStore,
     type Category,
     promptDefines,
-    getPromptsByCategory,
+    getDefinesByCategory,
   } from "../libs/prompts-store";
 
   class CategoryArea extends HTMLElement {
     constructor() {
       super();
 
-      const key = this.dataset.key as Category;
-      if (!key) return;
+      const category = this.dataset.category as Category;
+      if (!category) return;
 
       const clearButton = this.querySelector(
         `:scope > header > .clear-button`,
       )!;
 
       clearButton.addEventListener(`click`, () => {
-        const categoryMatches = promptDefines.filter(
-          ({ category }) => category === key,
-        );
-        const promptKeys = categoryMatches.map(({ key }) => key);
-
-        for (const key of promptKeys) {
-          promptEnableInfoStore.setKey(key, false);
+        const categoryDefines = getDefinesByCategory(category);
+        for (const { prompt } of categoryDefines) {
+          promptEnableInfoStore.setKey(prompt, false);
         }
       });
 
@@ -65,8 +79,8 @@ const prompts = categoryMatches.map(({ prompt }) => prompt);
 
       // Emit warning when multiple prompts are enable in same category.
       promptEnableInfoStore.subscribe((info) => {
-        const prompts = getPromptsByCategory(key);
-        const isEnables = prompts.map((p) => info[p]);
+        const categoryDefines = getDefinesByCategory(category);
+        const isEnables = categoryDefines.map(({ prompt }) => info[prompt]);
         const enableCount = isEnables.filter((isEnable) => isEnable).length;
 
         if (2 <= enableCount) {
@@ -92,9 +106,11 @@ const prompts = categoryMatches.map(({ prompt }) => prompt);
   }
 
   .prompts {
-    display: flex;
-    flex-flow: row wrap;
+    border: dashed 1px white;
+    display: grid;
     gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-auto-flow: row dense;
   }
 
   header {

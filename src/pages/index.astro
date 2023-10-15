@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import CategoryArea from "../components/CategoryArea.astro";
 import { tabNames, type TabKey } from "../components/Tabs.astro";
-import { allCategories, type Category } from "../libs/prompts-store";
+import { categorySet, type Category } from "../libs/prompts-store";
 import OutputArea from "../components/OutputArea.astro";
 
 const tabKey: TabKey = `main`;
@@ -25,7 +25,7 @@ const names: { [K in Category]: string } = {
   // sidelocks: `横髪`,
   // "top-of-the-head": `頭頂`,
   // "hair-misc": `髪: その他`,
-  // "hair-ornament": `髪飾り`,
+  "hair-ornament": `髪飾り`,
   // "hair-bow": `髪: 🎀`,
   // "hair-ribbon": `髪: 🎗`,
   // hairband: `髪: ヘアバンド`,
@@ -38,8 +38,8 @@ const names: { [K in Category]: string } = {
   <before-unload-script data-prod={import.meta.env.PROD} style="display:none"
   ></before-unload-script>
   {
-    allCategories.map((category) => (
-      <CategoryArea name={names[category]} key={category} />
+    [...categorySet].map((category) => (
+      <CategoryArea name={names[category]} category={category} />
     ))
   }
   <OutputArea />
