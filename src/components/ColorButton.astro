@@ -16,7 +16,16 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
 ---
 
 <button is="color-button" data-color-category={colorCategory}>
-  {colorCategory}
+  <div class="markers-wrapper">
+    {
+      colorCategoryDefines.map(({ color }) => (
+        <div class={`marker-wrapper ${color}`}>
+          <ColorMarker colorName={color!} />
+        </div>
+      ))
+    }
+  </div>
+  <span>{colorCategory}</span>
 </button>
 <div class="modal hide">
   <div class="modal-content">
@@ -37,6 +46,12 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
 </div>
 
 <script>
+  import {
+    getDefinesByColorCategory,
+    promptEnableInfoStore,
+    type ColorCategory,
+  } from "../libs/prompts-store";
+
   const modal = document.querySelector(`.modal`)!;
 
   class ColorButton extends HTMLButtonElement {
@@ -45,6 +60,22 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
 
       this.addEventListener(`click`, () => {
         modal.classList.remove(`hide`);
+      });
+
+      const colorCategory = this.dataset.colorCategory as ColorCategory;
+      const defs = getDefinesByColorCategory(colorCategory);
+
+      promptEnableInfoStore.subscribe((promptEnableInfo) => {
+        for (const { prompt, color } of defs) {
+          const isEnable = promptEnableInfo[prompt];
+          const colorWrapper = this.querySelector(`.marker-wrapper.${color}`)!;
+
+          if (isEnable) {
+            colorWrapper.classList.remove(`hide`);
+          } else {
+            colorWrapper.classList.add(`hide`);
+          }
+        }
       });
     }
   }
@@ -61,15 +92,21 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
   button {
     font-size: 1rem;
     border-radius: 0.5rem;
-    border: none;
+    border: solid 1px rgb(var(--text-main));
     padding: 0.4rem;
+    width: 100%;
+
     cursor: pointer;
     background-color: transparent;
     outline: none;
     appearance: none;
     color: inherit;
     border-color: rgb(var(--text-main));
-    width: 100%;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
+    align-items: center;
   }
 
   .modal {
@@ -113,10 +150,6 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
     grid-auto-flow: row dense;
   }
 
-  .hide {
-    display: none;
-  }
-
   .done {
     font-size: larger;
     background-color: transparent;
@@ -131,5 +164,19 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
     flex-flow: column nowrap;
     gap: 0.5rem;
     align-items: center;
+  }
+
+  .markers-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.3rem;
+    justify-content: center;
+  }
+  .marker-wrapper {
+    display: inline-block;
+  }
+
+  .hide {
+    display: none;
   }
 </style>
