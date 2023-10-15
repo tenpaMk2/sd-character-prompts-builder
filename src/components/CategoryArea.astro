@@ -77,7 +77,6 @@ const cellMap: ReadonlyMap<ColorCategory | Prompt, CellInfo> = new Map(
   <div class="prompts">
     {
       [...cellMap].map(([, { type, argument }]) => {
-        console.log(type, argument);
         switch (type) {
           case `color`:
             return <ColorButton colorCategory={argument as ColorCategory} />;
