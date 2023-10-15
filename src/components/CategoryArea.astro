@@ -18,10 +18,6 @@ const categoryDefines = getDefinesByCategory(category);
 const parentDefines = getDefinesHaveChildren();
 const childDefines = getDefinesHaveParent();
 const buttonDefines = categoryDefines.filter((x) => !childDefines.includes(x));
-
-for (const hoge of buttonDefines) {
-  console.log(hoge);
-}
 ---
 
 <category-area data-category={category}>
@@ -51,7 +47,6 @@ for (const hoge of buttonDefines) {
   import {
     promptEnableInfoStore,
     type Category,
-    promptDefines,
     getDefinesByCategory,
   } from "../libs/prompts-store";
 
