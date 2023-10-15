@@ -8,23 +8,26 @@ interface Props {
 const { prompt } = Astro.props;
 ---
 
-<button is="prompt-button" data-prompt={prompt}>
+<label is="prompt-button" data-prompt={prompt}>
+  <input type="checkbox" style="display: none;" />
   <slot />
-</button>
+</label>
 
 <script>
   import { type Prompt, promptEnableInfoStore } from "../libs/prompts-store";
 
-  class PromptButton extends HTMLButtonElement {
+  class PromptButton extends HTMLLabelElement {
     constructor() {
       super();
 
       const prompt = this.dataset.prompt as Prompt;
-      if (!prompt) return;
 
-      this.addEventListener(`click`, () => {
-        const isEnable = promptEnableInfoStore.get()[prompt];
-        promptEnableInfoStore.setKey(prompt, !isEnable);
+      const input = this.querySelector(`:scope > input`)!;
+      input.addEventListener(`change`, (event: Event) => {
+        promptEnableInfoStore.setKey(
+          prompt,
+          (event.currentTarget as HTMLInputElement).checked,
+        );
       });
 
       promptEnableInfoStore.subscribe((info) => {
@@ -38,23 +41,25 @@ const { prompt } = Astro.props;
     }
   }
 
-  customElements.define(`prompt-button`, PromptButton, { extends: `button` });
+  customElements.define(`prompt-button`, PromptButton, { extends: `label` });
 </script>
 
 <style>
-  button {
+  label {
     border: 1px solid rgb(var(--text-main));
+    border-radius: 0.5rem;
     color: rgb(var(--text-main));
     font-size: 1rem;
-    border-radius: 0.5rem;
     padding: 0.4rem;
     transition-duration: 200ms;
+    text-align: center;
+
     cursor: pointer;
     background-color: transparent;
     outline: none;
     appearance: none;
   }
-  button:hover {
+  label:hover {
     background-color: rgb(var(--accent-dark));
     transition-duration: 200ms;
   }
