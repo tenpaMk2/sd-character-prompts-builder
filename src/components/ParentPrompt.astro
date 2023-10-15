@@ -37,9 +37,6 @@ const childPrompts = getChildDefines(parentPrompt).map(({ prompt }) => prompt);
         `.prompts-container`,
       )! as HTMLDivElement;
 
-      console.log(bar);
-      console.log(promptsContainer);
-
       bar.addEventListener(`click`, () => {
         const isEnable = promptEnableInfoStore.get()[parentPrompt];
         promptEnableInfoStore.setKey(parentPrompt, !isEnable);
@@ -47,8 +44,6 @@ const childPrompts = getChildDefines(parentPrompt).map(({ prompt }) => prompt);
 
       promptEnableInfoStore.subscribe((info) => {
         const isEnable = info[parentPrompt];
-        console.log(`hohoho`);
-        console.log(isEnable);
         if (isEnable) {
           this.classList.add(`opening`);
         } else {
