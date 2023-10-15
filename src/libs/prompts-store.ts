@@ -85,7 +85,7 @@ export const promptDefines = [
   {
     prompt: `red eyes`,
     categories: [`eyes-color`],
-    isEnableByDefault: false,
+    isEnableByDefault: true,
     colorCategory: `common-color`,
     color: `red`,
     suggests: null,
