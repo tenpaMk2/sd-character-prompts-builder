@@ -9,7 +9,7 @@ const { prompt } = Astro.props;
 ---
 
 <button is="prompt-button" data-prompt={prompt}>
-  {prompt}
+  <slot />
 </button>
 
 <script>

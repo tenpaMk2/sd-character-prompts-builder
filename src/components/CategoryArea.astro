@@ -3,10 +3,14 @@ import {
   type Category,
   getDefinesByCategory,
   getDefinesHaveChildren,
+  type Prompt,
+  type ColorCategory,
   getDefinesHaveParent,
 } from "../libs/prompts-store";
 import ParentPrompt from "./ParentPrompt.astro";
 import PromptButton from "./PromptButton.astro";
+import ColorButton from "./ColorButton.astro";
+
 interface Props {
   name: string;
   category: Category;
@@ -17,7 +21,52 @@ const { name, category } = Astro.props;
 const categoryDefines = getDefinesByCategory(category);
 const parentDefines = getDefinesHaveChildren();
 const childDefines = getDefinesHaveParent();
-const buttonDefines = categoryDefines.filter((x) => !childDefines.includes(x));
+
+type CellInfo =
+  | {
+      readonly type: `color`;
+      readonly argument: ColorCategory;
+    }
+  | {
+      readonly type: `parent` | `normal`;
+      readonly argument: Prompt;
+    };
+
+const mapInput = categoryDefines.map((def) => {
+  if (def.colorCategory) {
+    return [
+      def.colorCategory,
+      {
+        type: `color`,
+        argument: def.colorCategory,
+      },
+    ];
+  }
+
+  if (parentDefines.includes(def)) {
+    return [
+      def.prompt,
+      {
+        type: `parent`,
+        argument: def.prompt,
+      },
+    ];
+  }
+
+  if (childDefines.includes(def)) return null;
+
+  return [
+    def.prompt,
+    {
+      type: `normal`,
+      argument: def.prompt,
+    },
+  ];
+});
+
+const cellMap: ReadonlyMap<ColorCategory | Prompt, CellInfo> = new Map(
+  mapInput.filter((x) => x) as Iterable<[ColorCategory | Prompt, CellInfo]>,
+);
 ---
 
 <category-area data-category={category}>
@@ -27,13 +76,21 @@ const buttonDefines = categoryDefines.filter((x) => !childDefines.includes(x));
   </header>
   <div class="prompts">
     {
-      buttonDefines.map((x) =>
-        parentDefines.includes(x) ? (
-          <ParentPrompt parentPrompt={x.prompt} />
-        ) : (
-          <PromptButton prompt={x.prompt} />
-        ),
-      )
+      [...cellMap].map(([, { type, argument }]) => {
+        console.log(type, argument);
+        switch (type) {
+          case `color`:
+            return <ColorButton colorCategory={argument as ColorCategory} />;
+          case `parent`:
+            return <ParentPrompt parentPrompt={argument as Prompt} />;
+          case `normal`:
+            return (
+              <PromptButton prompt={argument as Prompt}>
+                {argument}
+              </PromptButton>
+            );
+        }
+      })
     }
   </div>
   <div class="mupltiple-enables-warning hide">
@@ -104,7 +161,7 @@ const buttonDefines = categoryDefines.filter((x) => !childDefines.includes(x));
     border: dashed 1px white;
     display: grid;
     gap: 0.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
     grid-auto-flow: row dense;
   }
 

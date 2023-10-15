@@ -9,17 +9,16 @@ interface Props {
 const { parentPrompt } = Astro.props;
 
 const childPrompts = getChildDefines(parentPrompt).map(({ prompt }) => prompt);
-
-console.log(`---parentPrompt=${parentPrompt}---`);
-for (const c of childPrompts) {
-  console.log(c);
-}
 ---
 
 <parent-prompt data-parent={parentPrompt}>
   <button class="bar">{parentPrompt}</button>
   <div class="prompts-container hide">
-    {childPrompts.map((childPrompt) => <PromptButton prompt={childPrompt} />)}
+    {
+      childPrompts.map((childPrompt) => (
+        <PromptButton prompt={childPrompt}>{childPrompt}</PromptButton>
+      ))
+    }
   </div>
 </parent-prompt>
 

@@ -1,0 +1,39 @@
+---
+import { type ColorName } from "../libs/prompts-store";
+
+interface Props {
+  colorName: ColorName;
+}
+
+const { colorName } = Astro.props;
+
+const colorRGBDefine: { readonly [K in ColorName]: string } = {
+  aqua: `0% 100% 100%`,
+  black: `0% 0% 0%`,
+  blue: `0% 0% 100%`,
+  brown: `65% 16% 16%`,
+  green: `0% 100% 0%`,
+  grey: `50% 50% 50%`,
+  orange: `100% 65% 0%`,
+  purple: `88% 12% 88%`,
+  pink: `100% 75% 80%`,
+  red: `100% 0% 0%`,
+  white: `100% 100% 100%`,
+  yellow: `100% 100% 0%`,
+};
+
+const colorRGB = colorRGBDefine[colorName];
+---
+
+<i></i>
+
+<style define:vars={{ colorRGB }}>
+  i {
+    display: inline-block;
+    width: 2em;
+    aspect-ratio: 1 / 1;
+    background-color: rgb(var(--colorRGB));
+    border: solid 0.2em white;
+    border-radius: 9999rem;
+  }
+</style>

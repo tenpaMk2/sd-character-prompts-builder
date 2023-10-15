@@ -11,20 +11,101 @@ export const promptDefines = [
     parent: null,
   },
   {
+    prompt: `black eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `black`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `blue eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `blue`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `brown eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `brown`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `green eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `green`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `grey eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `grey`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `orange eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `orange`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `purple eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `purple`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `pink eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `pink`,
+    suggests: null,
+    parent: null,
+  },
+  {
     prompt: `red eyes`,
     categories: [`eyes-color`],
-    isEnableByDefault: true,
+    isEnableByDefault: false,
     colorCategory: `common-color`,
     color: `red`,
     suggests: null,
     parent: null,
   },
   {
-    prompt: `black eyes`,
+    prompt: `white eyes`,
     categories: [`eyes-color`],
     isEnableByDefault: false,
     colorCategory: `common-color`,
-    color: `black`,
+    color: `white`,
+    suggests: null,
+    parent: null,
+  },
+  {
+    prompt: `yellow eyes`,
+    categories: [`eyes-color`],
+    isEnableByDefault: false,
+    colorCategory: `common-color`,
+    color: `yellow`,
     suggests: null,
     parent: null,
   },
@@ -146,6 +227,12 @@ export const promptSet = promptSetMutable as ReadonlySet<Prompt>;
 const categories = promptDefines.map(({ categories }) => categories).flat();
 export type Category = (typeof categories)[number];
 export const categorySet = new Set(categories) as ReadonlySet<Category>;
+
+const colorNames = promptDefines.map(({ color }) => color);
+export type ColorName = Exclude<(typeof colorNames)[number], null>;
+const colorNameNullableSet = new Set(colorNames);
+colorNameNullableSet.delete(null);
+export const colorNameSet = colorNameNullableSet as ReadonlySet<ColorName>;
 
 const colorCategories = promptDefines.map(({ colorCategory }) => colorCategory);
 export type ColorCategory = Exclude<(typeof colorCategories)[number], null>;
