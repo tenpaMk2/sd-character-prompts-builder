@@ -35,7 +35,7 @@ type CellInfo =
 const mapInput = categoryDefines.map((def) => {
   if (def.colorCategory) {
     return [
-      def.colorCategory,
+      `colorCategory::${def.colorCategory}`,
       {
         type: `color`,
         argument: def.colorCategory,
@@ -45,7 +45,7 @@ const mapInput = categoryDefines.map((def) => {
 
   if (parentDefines.includes(def)) {
     return [
-      def.prompt,
+      `parent::${def.prompt}`,
       {
         type: `parent`,
         argument: def.prompt,
@@ -56,7 +56,7 @@ const mapInput = categoryDefines.map((def) => {
   if (childDefines.includes(def)) return null;
 
   return [
-    def.prompt,
+    `normal::${def.prompt}`,
     {
       type: `normal`,
       argument: def.prompt,
