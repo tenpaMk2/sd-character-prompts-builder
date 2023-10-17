@@ -1,0 +1,161 @@
+---
+import {
+  colorCategorySet,
+  getDefinesByColorCategory,
+  type ColorCategory,
+  type Prompt,
+  type ColorName,
+} from "../libs/prompts-store";
+import ColorMarker from "./ColorMarker.astro";
+import PromptButton from "./PromptButton.astro";
+
+const colorCategoryInfoMap = new Map<
+  ColorCategory,
+  { prompt: Prompt; color: ColorName }[]
+>();
+for (const c of colorCategorySet) {
+  const defs = getDefinesByColorCategory(c);
+
+  colorCategoryInfoMap.set(
+    c,
+    defs.map(({ prompt, color }) => {
+      if (!color) throw new Error("`color` is `null` !!");
+      return { prompt, color };
+    }),
+  );
+}
+---
+
+<modal-container class="modal-black-screen hide">
+  {
+    [...colorCategoryInfoMap].map(([colorCategory, pAndCs]) => (
+      <modal-window
+        class={`modal ${colorCategory} hide`}
+        data-color-category={colorCategory}
+      >
+        <div class="color-buttons-wrapper">
+          {pAndCs.map(({ prompt, color }) => (
+            <PromptButton prompt={prompt}>
+              <p class="marker-and-prompt-wrapper">
+                <ColorMarker colorName={color} />
+                <span>{prompt}</span>
+              </p>
+            </PromptButton>
+          ))}
+        </div>
+        <button class="done">Done</button>
+      </modal-window>
+    ))
+  }
+</modal-container>
+
+<script>
+  import { type ColorCategory } from "../libs/prompts-store";
+  import { modalEnableStore } from "../libs/modal-store";
+  import { getKeys } from "../libs/util";
+
+  class ModalWindow extends HTMLElement {
+    constructor() {
+      super();
+
+      const colorCategory = this.dataset.colorCategory as ColorCategory;
+
+      const done = this.querySelector(`.done`)!;
+      done.addEventListener(`click`, () => {
+        modalEnableStore.setKey(colorCategory, false);
+      });
+    }
+  }
+  customElements.define(`modal-window`, ModalWindow);
+
+  class ModalContainer extends HTMLElement {
+    constructor() {
+      super();
+
+      modalEnableStore.subscribe((modalEnable) => {
+        const modals: NodeListOf<ModalWindow> =
+          this.querySelectorAll(`modal-window`);
+        for (const modal of modals) {
+          if (modalEnable[modal.dataset.colorCategory as ColorCategory]) {
+            modal?.classList.remove(`hide`);
+          } else {
+            modal?.classList.add(`hide`);
+          }
+        }
+
+        const isAnyModalEnable = [...getKeys(modalEnable)].some(
+          (k) => modalEnable[k],
+        );
+        if (isAnyModalEnable) {
+          this.classList.remove(`hide`);
+        } else {
+          this.classList.add(`hide`);
+        }
+      });
+    }
+  }
+  customElements.define(`modal-container`, ModalContainer);
+</script>
+
+<style>
+  .modal-black-screen {
+    background-color: rgb(0 0 0 / 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+
+    z-index: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 720px;
+    background-color: rgb(var(--background-sub));
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0 1rem rgb(var(--accent-light));
+
+    max-height: 100%;
+    overflow: auto;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .color-buttons-wrapper {
+    width: 100%;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    grid-auto-flow: row dense;
+  }
+
+  .marker-and-prompt-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .done {
+    font-size: larger;
+    background-color: transparent;
+    border: solid 1px rgb(var(--text-main));
+    border-radius: 1rem;
+    width: min-content;
+    padding: 1rem 3rem;
+  }
+
+  .hide {
+    display: none;
+  }
+</style>

@@ -4,6 +4,7 @@ import CategoryArea from "../components/CategoryArea.astro";
 import { tabNames, type TabKey } from "../components/Tabs.astro";
 import { categorySet, type Category } from "../libs/prompts-store";
 import OutputArea from "../components/OutputArea.astro";
+import Modal from "../components/Modal.astro";
 
 const tabKey: TabKey = `main`;
 const tabName = tabNames[tabKey];
@@ -43,6 +44,7 @@ const names: { [K in Category]: string } = {
     ))
   }
   <OutputArea />
+  <Modal />
 </Layout>
 
 <script>

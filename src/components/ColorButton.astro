@@ -4,7 +4,6 @@ import {
   type ColorCategory,
 } from "../libs/prompts-store";
 import ColorMarker from "./ColorMarker.astro";
-import PromptButton from "./PromptButton.astro";
 
 interface Props {
   colorCategory: ColorCategory;
@@ -25,42 +24,20 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
       ))
     }
   </div>
-  <span>{colorCategory}</span>
+  <p>{colorCategory}</p>
 </button>
-<div class="modal hide">
-  <div class="modal-content">
-    <div class="color-buttons-wrapper">
-      {
-        colorCategoryDefines.map(({ prompt, color }) => (
-          <PromptButton prompt={prompt}>
-            <p class="marker-and-prompt-wrapper">
-              <ColorMarker colorName={color!} />
-              <span>{prompt}</span>
-            </p>
-          </PromptButton>
-        ))
-      }
-    </div>
-    <button class="done">Done</button>
-  </div>
-</div>
 
 <script>
+  import { modalEnableStore } from "../libs/modal-store";
   import {
     getDefinesByColorCategory,
     promptEnableInfoStore,
     type ColorCategory,
   } from "../libs/prompts-store";
 
-  const modal = document.querySelector(`.modal`)!;
-
   class ColorButton extends HTMLButtonElement {
     constructor() {
       super();
-
-      this.addEventListener(`click`, () => {
-        modal.classList.remove(`hide`);
-      });
 
       const colorCategory = this.dataset.colorCategory as ColorCategory;
       const defs = getDefinesByColorCategory(colorCategory);
@@ -77,15 +54,13 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
           }
         }
       });
+
+      this.addEventListener(`click`, () =>
+        modalEnableStore.setKey(colorCategory, true),
+      );
     }
   }
-
   customElements.define(`color-button`, ColorButton, { extends: `button` });
-
-  const done = document.querySelector(`.done`)!;
-  done.addEventListener(`click`, () => {
-    modal.classList.add(`hide`);
-  });
 </script>
 
 <style>
