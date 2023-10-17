@@ -32,10 +32,8 @@ const childPrompts = getChildDefines(parentPrompt).map(({ prompt }) => prompt);
       const parentPrompt = this.dataset.parent as Prompt;
       if (!parentPrompt) return;
 
-      const bar = this.querySelector(`button`)!;
-      const promptsContainer = this.querySelector(
-        `.prompts-container`,
-      )! as HTMLDivElement;
+      const bar = this.querySelector(`button`);
+      if (!bar) throw new Error("`button` is null!!");
 
       bar.addEventListener(`click`, () => {
         const isEnable = promptEnableInfoStore.get()[parentPrompt];
