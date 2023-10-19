@@ -1,8 +1,5 @@
 ---
-import {
-  getDefinesByColorCategory,
-  type ColorCategory,
-} from "../libs/prompts-store";
+import { type ColorCategory, colorCategoryTree } from "../libs/prompts-store";
 import ColorMarker from "./ColorMarker.astro";
 
 interface Props {
@@ -10,16 +7,14 @@ interface Props {
 }
 
 const { colorCategory } = Astro.props;
-
-const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
 ---
 
 <button is="color-button" data-color-category={colorCategory}>
   <div class="markers-wrapper">
     {
-      colorCategoryDefines.map(({ color }) => (
-        <div class={`marker-wrapper ${color}`}>
-          <ColorMarker colorName={color!} />
+      colorCategoryTree[colorCategory].map(({ colorName }) => (
+        <div class={`marker-wrapper ${colorName}`}>
+          <ColorMarker colorName={colorName} />
         </div>
       ))
     }
@@ -30,9 +25,9 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
 <script>
   import { modalEnableStore } from "../libs/modal-store";
   import {
-    getDefinesByColorCategory,
     promptEnableInfoStore,
     type ColorCategory,
+    colorCategoryTree,
   } from "../libs/prompts-store";
 
   class ColorButton extends HTMLButtonElement {
@@ -40,12 +35,13 @@ const colorCategoryDefines = getDefinesByColorCategory(colorCategory);
       super();
 
       const colorCategory = this.dataset.colorCategory as ColorCategory;
-      const defs = getDefinesByColorCategory(colorCategory);
 
       promptEnableInfoStore.subscribe((promptEnableInfo) => {
-        for (const { prompt, color } of defs) {
+        for (const { prompt, colorName } of colorCategoryTree[colorCategory]) {
           const isEnable = promptEnableInfo[prompt];
-          const colorWrapper = this.querySelector(`.marker-wrapper.${color}`)!;
+          const colorWrapper = this.querySelector(
+            `.marker-wrapper.${colorName}`,
+          )!;
 
           if (isEnable) {
             colorWrapper.classList.remove(`hide`);

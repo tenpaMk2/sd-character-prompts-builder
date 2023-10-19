@@ -1,10 +1,10 @@
 ---
-import { categorySet } from "../libs/prompts-store";
+import { allCategories } from "../libs/prompts-store";
 import SliderButton from "./SliderButton.astro";
 
-const n = categorySet.size;
+const n = allCategories.length;
 const categoryInfo = new Map(
-  [...categorySet].map((c, index) => [
+  allCategories.map((c, index) => [
     c,
     {
       className: c.replace(` `, `-`),
@@ -28,7 +28,7 @@ const categoryInfo = new Map(
   </div>
   <div class="flex-row">
     <pre
-      id="prompts-output">{[...categorySet].map((category) =>
+      id="prompts-output">{allCategories.map((category) =>
       (<code class={categoryInfo.get(category)?.className} style={`background-color:${categoryInfo.get(category)?.color}`} /><br class="line-break" />))
         }</pre>
     <button id="prompts-copy-button">📋</button>
@@ -37,9 +37,9 @@ const categoryInfo = new Map(
 
 <script>
   import {
-    categorySet,
+    allCategories,
     promptEnableInfoStore,
-    getDefinesByCategory,
+    queryAllPromptsByCategory,
   } from "../libs/prompts-store";
   import { sliderButtonStoreMap } from "../libs/slider-button-store";
   import { computed } from "nanostores";
@@ -55,10 +55,10 @@ const categoryInfo = new Map(
   );
 
   outputMaterials.subscribe(({ isOneLine, promptEnableInfo }) => {
-    for (const category of categorySet) {
-      const categoryDefines = getDefinesByCategory(category);
-      const categoryOutputs = categoryDefines
-        .map(({ prompt }) => (promptEnableInfo[prompt] ? `${prompt}, ` : ``))
+    for (const category of allCategories) {
+      const allPrompts = queryAllPromptsByCategory(category);
+      const categoryOutputs = allPrompts
+        .map((prompt) => (promptEnableInfo[prompt] ? `${prompt}, ` : ``))
         .join(``);
 
       const code = document.querySelector(`#prompts-output > .${category}`)!;

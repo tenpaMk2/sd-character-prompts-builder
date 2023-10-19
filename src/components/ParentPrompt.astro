@@ -1,23 +1,40 @@
 ---
-import { getChildDefines, type Prompt } from "../libs/prompts-store";
+import {
+  type Prompt,
+  type Category,
+  queryChildren,
+} from "../libs/prompts-store";
+import ColorButton from "./ColorButton.astro";
 import PromptButton from "./PromptButton.astro";
 
 interface Props {
+  category: Category;
   parentPrompt: Prompt;
 }
 
-const { parentPrompt } = Astro.props;
+const { category, parentPrompt } = Astro.props;
 
-const childPrompts = getChildDefines(parentPrompt).map(({ prompt }) => prompt);
+const childLeafs = queryChildren(category, parentPrompt);
 ---
 
 <parent-prompt data-parent={parentPrompt}>
   <button class="bar">{parentPrompt}</button>
   <div class="prompts-container hide">
     {
-      childPrompts.map((childPrompt) => (
-        <PromptButton prompt={childPrompt}>{childPrompt}</PromptButton>
-      ))
+      childLeafs.map((leaf) => {
+        switch (leaf.type) {
+          case `parent-prompt`:
+            return (
+              <Astro.self category={category} parentPrompt={leaf.prompt} />
+            );
+          case `color-parent`:
+            return <ColorButton colorCategory={leaf.colorCategory} />;
+          case `child-prompt`:
+            return (
+              <PromptButton prompt={leaf.prompt}>{leaf.prompt}</PromptButton>
+            );
+        }
+      })
     }
   </div>
 </parent-prompt>

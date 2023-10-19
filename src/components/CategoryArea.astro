@@ -1,12 +1,5 @@
 ---
-import {
-  type Category,
-  getDefinesByCategory,
-  getDefinesHaveChildren,
-  type Prompt,
-  type ColorCategory,
-  getDefinesHaveParent,
-} from "../libs/prompts-store";
+import { uITree, type Category } from "../libs/prompts-store";
 import ParentPrompt from "./ParentPrompt.astro";
 import PromptButton from "./PromptButton.astro";
 import ColorButton from "./ColorButton.astro";
@@ -17,56 +10,6 @@ interface Props {
 }
 
 const { name, category } = Astro.props;
-
-const categoryDefines = getDefinesByCategory(category);
-const parentDefines = getDefinesHaveChildren();
-const childDefines = getDefinesHaveParent();
-
-type CellInfo =
-  | {
-      readonly type: `color`;
-      readonly argument: ColorCategory;
-    }
-  | {
-      readonly type: `parent` | `normal`;
-      readonly argument: Prompt;
-    };
-
-const mapInput = categoryDefines.map((def) => {
-  if (def.colorCategory) {
-    return [
-      `colorCategory::${def.colorCategory}`,
-      {
-        type: `color`,
-        argument: def.colorCategory,
-      },
-    ];
-  }
-
-  if (parentDefines.includes(def)) {
-    return [
-      `parent::${def.prompt}`,
-      {
-        type: `parent`,
-        argument: def.prompt,
-      },
-    ];
-  }
-
-  if (childDefines.includes(def)) return null;
-
-  return [
-    `normal::${def.prompt}`,
-    {
-      type: `normal`,
-      argument: def.prompt,
-    },
-  ];
-});
-
-const cellMap: ReadonlyMap<ColorCategory | Prompt, CellInfo> = new Map(
-  mapInput.filter((x) => x) as Iterable<[ColorCategory | Prompt, CellInfo]>,
-);
 ---
 
 <category-area data-category={category}>
@@ -76,17 +19,17 @@ const cellMap: ReadonlyMap<ColorCategory | Prompt, CellInfo> = new Map(
   </header>
   <div class="prompts">
     {
-      [...cellMap].map(([, { type, argument }]) => {
-        switch (type) {
-          case `color`:
-            return <ColorButton colorCategory={argument as ColorCategory} />;
-          case `parent`:
-            return <ParentPrompt parentPrompt={argument as Prompt} />;
-          case `normal`:
+      uITree[category].map((leaf) => {
+        switch (leaf.type) {
+          case `parent-prompt`:
             return (
-              <PromptButton prompt={argument as Prompt}>
-                {argument}
-              </PromptButton>
+              <ParentPrompt category={category} parentPrompt={leaf.prompt} />
+            );
+          case `color-parent`:
+            return <ColorButton colorCategory={leaf.colorCategory} />;
+          case `child-prompt`:
+            return (
+              <PromptButton prompt={leaf.prompt}>{leaf.prompt}</PromptButton>
             );
         }
       })
@@ -103,7 +46,7 @@ const cellMap: ReadonlyMap<ColorCategory | Prompt, CellInfo> = new Map(
   import {
     promptEnableInfoStore,
     type Category,
-    getDefinesByCategory,
+    queryAllPromptsByCategory,
   } from "../libs/prompts-store";
 
   class CategoryArea extends HTMLElement {
@@ -111,27 +54,28 @@ const cellMap: ReadonlyMap<ColorCategory | Prompt, CellInfo> = new Map(
       super();
 
       const category = this.dataset.category as Category;
-      if (!category) return;
 
       const clearButton = this.querySelector(
         `:scope > header > .clear-button`,
       )!;
 
       clearButton.addEventListener(`click`, () => {
-        const categoryDefines = getDefinesByCategory(category);
-        for (const { prompt } of categoryDefines) {
+        const prompts = queryAllPromptsByCategory(category);
+        for (const prompt of prompts) {
           promptEnableInfoStore.setKey(prompt, false);
         }
       });
 
       const multipleEnablesWarning = this.querySelector(
-        `:scope > .mupltiple-enables-warning`,
-      )!;
+        `.mupltiple-enables-warning`,
+      );
+      if (!multipleEnablesWarning)
+        throw new Error("`.multipleEnablesWarning` is not found!!");
 
       // Emit warning when multiple prompts are enable in same category.
       promptEnableInfoStore.subscribe((info) => {
-        const categoryDefines = getDefinesByCategory(category);
-        const isEnables = categoryDefines.map(({ prompt }) => info[prompt]);
+        const prompts = queryAllPromptsByCategory(category);
+        const isEnables = prompts.map((prompt) => info[prompt]);
         const enableCount = isEnables.filter((isEnable) => isEnable).length;
 
         if (2 <= enableCount) {

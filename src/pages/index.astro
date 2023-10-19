@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import CategoryArea from "../components/CategoryArea.astro";
 import { tabNames, type TabKey } from "../components/Tabs.astro";
-import { categorySet, type Category } from "../libs/prompts-store";
+import { allCategories, type Category } from "../libs/prompts-store";
 import OutputArea from "../components/OutputArea.astro";
 import Modal from "../components/Modal.astro";
 
@@ -39,7 +39,7 @@ const names: { [K in Category]: string } = {
   <before-unload-script data-prod={import.meta.env.PROD} style="display:none"
   ></before-unload-script>
   {
-    [...categorySet].map((category) => (
+    allCategories.map((category) => (
       <CategoryArea name={names[category]} category={category} />
     ))
   }

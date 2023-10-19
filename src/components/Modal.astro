@@ -1,43 +1,22 @@
 ---
-import {
-  colorCategorySet,
-  getDefinesByColorCategory,
-  type ColorCategory,
-  type Prompt,
-  type ColorName,
-} from "../libs/prompts-store";
+import { colorCategoryTree } from "../libs/prompts-store";
+import { getKeys } from "../libs/util";
 import ColorMarker from "./ColorMarker.astro";
 import PromptButton from "./PromptButton.astro";
-
-const colorCategoryInfoMap = new Map<
-  ColorCategory,
-  { prompt: Prompt; color: ColorName }[]
->();
-for (const c of colorCategorySet) {
-  const defs = getDefinesByColorCategory(c);
-
-  colorCategoryInfoMap.set(
-    c,
-    defs.map(({ prompt, color }) => {
-      if (!color) throw new Error("`color` is `null` !!");
-      return { prompt, color };
-    }),
-  );
-}
 ---
 
 <modal-container class="modal-black-screen hide">
   {
-    [...colorCategoryInfoMap].map(([colorCategory, pAndCs]) => (
+    getKeys(colorCategoryTree).map((colorCategory) => (
       <modal-window
         class={`modal ${colorCategory} hide`}
         data-color-category={colorCategory}
       >
         <div class="color-buttons-wrapper">
-          {pAndCs.map(({ prompt, color }) => (
+          {colorCategoryTree[colorCategory].map(({ prompt, colorName }) => (
             <PromptButton prompt={prompt}>
               <p class="marker-and-prompt-wrapper">
-                <ColorMarker colorName={color} />
+                <ColorMarker colorName={colorName} />
                 <span>{prompt}</span>
               </p>
             </PromptButton>
