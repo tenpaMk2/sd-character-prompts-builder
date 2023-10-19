@@ -686,7 +686,11 @@ export const queryAllPromptsByCategory = (category: Category): Prompt[] => {
   const recursiveReducer = (previous: Prompt[], current: UILeaf): Prompt[] => {
     switch (current.type) {
       case `parent-prompt`:
-        return [...previous, ...current.children.reduce(recursiveReducer, [])];
+        return [
+          ...previous,
+          current.prompt,
+          ...current.children.reduce(recursiveReducer, []),
+        ];
       case `child-prompt`:
         return [...previous, current.prompt];
       case `color-parent`:
