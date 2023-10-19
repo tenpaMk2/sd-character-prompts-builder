@@ -17,7 +17,7 @@ const { category, parentPrompt } = Astro.props;
 const childLeafs = queryChildren(category, parentPrompt);
 ---
 
-<parent-prompt data-parent={parentPrompt}>
+<parent-prompt data-category={category} data-parent={parentPrompt}>
   <button class="bar">{parentPrompt}</button>
   <div class="prompts-container hide">
     {
@@ -40,17 +40,24 @@ const childLeafs = queryChildren(category, parentPrompt);
 </parent-prompt>
 
 <script>
-  import { promptEnableInfoStore, type Prompt } from "../libs/prompts-store";
+  import {
+    promptEnableInfoStore,
+    type Prompt,
+    queryChildren,
+    type Category,
+    type UILeaf,
+    colorCategoryTree,
+  } from "../libs/prompts-store";
 
   class ParentPrompt extends HTMLElement {
     constructor() {
       super();
 
+      const category = this.dataset.category as Category;
       const parentPrompt = this.dataset.parent as Prompt;
-      if (!parentPrompt) return;
 
       const bar = this.querySelector(`button`);
-      if (!bar) throw new Error("`button` is null!!");
+      if (!bar) throw new Error("`button` is not found!!");
 
       bar.addEventListener(`click`, () => {
         const isEnable = promptEnableInfoStore.get()[parentPrompt];
@@ -63,6 +70,27 @@ const childLeafs = queryChildren(category, parentPrompt);
           this.classList.add(`opening`);
         } else {
           this.classList.remove(`opening`);
+
+          const disableRecursively = (leaf: UILeaf) => {
+            switch (leaf.type) {
+              case `parent-prompt`:
+                promptEnableInfoStore.setKey(leaf.prompt, false);
+                leaf.children.forEach(disableRecursively);
+                return;
+              case `child-prompt`:
+                promptEnableInfoStore.setKey(leaf.prompt, false);
+                return;
+              case `color-parent`:
+                for (const { prompt } of colorCategoryTree[
+                  leaf.colorCategory
+                ]) {
+                  promptEnableInfoStore.setKey(prompt, false);
+                }
+                return;
+            }
+          };
+          const children = queryChildren(category, parentPrompt);
+          children.forEach(disableRecursively);
         }
       });
     }
