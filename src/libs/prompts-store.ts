@@ -274,6 +274,7 @@ export const allColorCategories = [
 export type ColorCategory = (typeof allColorCategories)[number];
 
 export type ColorName =
+  | `none`
   | `aqua`
   | `black`
   | `blue`

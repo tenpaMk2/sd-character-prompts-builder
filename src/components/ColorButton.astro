@@ -11,9 +11,12 @@ const { colorCategory } = Astro.props;
 
 <button is="color-button" data-color-category={colorCategory}>
   <div class="markers-wrapper">
+    <div class={`marker-wrapper none`}>
+      <ColorMarker colorName="none" />
+    </div>
     {
       colorCategoryTree[colorCategory].map(({ colorName }) => (
-        <div class={`marker-wrapper ${colorName}`}>
+        <div class={`marker-wrapper ${colorName} hide`}>
           <ColorMarker colorName={colorName} />
         </div>
       ))
@@ -48,6 +51,21 @@ const { colorCategory } = Astro.props;
           } else {
             colorWrapper.classList.add(`hide`);
           }
+        }
+
+        // Control none marker.
+        const noneWrapper = this.querySelector(`.marker-wrapper.none`);
+        if (!noneWrapper)
+          throw new Error("`.marker-wrapper.none` is not found!!");
+
+        if (
+          colorCategoryTree[colorCategory].some(
+            ({ prompt }) => promptEnableInfo[prompt],
+          )
+        ) {
+          noneWrapper.classList.add(`hide`);
+        } else {
+          noneWrapper.classList.remove(`hide`);
         }
       });
 

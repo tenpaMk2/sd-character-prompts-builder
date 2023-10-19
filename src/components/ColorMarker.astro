@@ -8,6 +8,7 @@ interface Props {
 const { colorName } = Astro.props;
 
 const colorRGBDefine: { readonly [K in ColorName]: string } = {
+  none: `0% 0% 0% / 0%`,
   aqua: `0% 100% 100%`,
   black: `0% 0% 0%`,
   blue: `0% 0% 100%`,
@@ -32,7 +33,7 @@ const colorRGBDefine: { readonly [K in ColorName]: string } = {
 const colorRGB = colorRGBDefine[colorName];
 ---
 
-<i></i>
+<i class={colorName}></i>
 
 <style define:vars={{ colorRGB }}>
   i {
@@ -42,5 +43,9 @@ const colorRGB = colorRGBDefine[colorName];
     background-color: rgb(var(--colorRGB));
     border: solid 0.2em white;
     border-radius: 9999rem;
+  }
+
+  i.none {
+    border: dashed;
   }
 </style>
