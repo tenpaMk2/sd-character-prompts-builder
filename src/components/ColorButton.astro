@@ -53,16 +53,23 @@ const { colorCategory } = Astro.props;
           }
         }
 
+        const hasAnyEnable = colorCategoryTree[colorCategory].some(
+          ({ prompt }) => promptEnableInfo[prompt],
+        );
+
+        // Control highlight of the color button.
+        if (hasAnyEnable) {
+          this.classList.add(`enable`);
+        } else {
+          this.classList.remove(`enable`);
+        }
+
         // Control none marker.
         const noneWrapper = this.querySelector(`.marker-wrapper.none`);
         if (!noneWrapper)
           throw new Error("`.marker-wrapper.none` is not found!!");
 
-        if (
-          colorCategoryTree[colorCategory].some(
-            ({ prompt }) => promptEnableInfo[prompt],
-          )
-        ) {
+        if (hasAnyEnable) {
           noneWrapper.classList.add(`hide`);
         } else {
           noneWrapper.classList.remove(`hide`);
@@ -163,6 +170,11 @@ const { colorCategory } = Astro.props;
   }
   .marker-wrapper {
     display: inline-block;
+  }
+
+  .enable {
+    background: rgb(var(--accent));
+    border-color: rgb(var(--accent-dark));
   }
 
   .hide {
