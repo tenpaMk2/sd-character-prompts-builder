@@ -1,0 +1,77 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { tabNames, type TabKey } from "../components/Tabs.astro";
+
+const tabKey: TabKey = `others`;
+const tabName = tabNames[tabKey];
+const layoutInfo = {
+  tabKey,
+  tabName,
+};
+---
+
+<Layout {...layoutInfo}>
+  <article>
+    <h2>このアプリ開発のモチベーション</h2>
+    <p>Stable Diffusion web UIでキャラクタを作るとき、 ↓の問題があった。</p>
+    <ul>
+      <li>つけるべきプロンプトを忘れる。</li>
+      <li>プロンプトの順番がキャラごとにバラバラで視認性が悪い。</li>
+      <li>関連性のあるプロンプトを入れ忘れる。</li>
+    </ul>
+    <p>これらの問題をすべて解決したかったのが狙い。</p>
+    <p>
+      ちなみに、<a
+        href="https://github.com/blue-pen5805/sdweb-easy-prompt-selector"
+        >ほぼ同じ機能を持ったweb UIの拡張機能</a
+      >を見つけたのは作り始めたあとだった❗ゴウランガ❗
+    </p>
+
+    <h2>技術スタック</h2>
+    <p>↓だけ。</p>
+    <ul>
+      <li><a href="https://astro.build/">Astro</a></li>
+    </ul>
+    <p>今回はあえてReactもTailwindCSSも使わないでやってみた。</p>
+    <p>
+      そのあたりの話は<a href="https://tenpamk2-blog.netlify.app/">ブログ</a
+      >か<a href="https://qiita.com/tenpaMk2">Qiita</a>に書くかも。
+    </p>
+
+    <h2>作者: tenpaMk2</h2>
+    <p>↓に生息してる。</p>
+    <ul>
+      <li>
+        <a href="https://twitter.com/tenpaMk2">Twitter 本アカ: @tenpaMk2</a>
+      </li>
+      <li>
+        <a href="https://twitter.com/tenpaMk2_ai"
+          >Twitter AI専用アカ: @tenpaMk2_ai</a
+        >
+      </li>
+      <li>Discord: 某サーバ</li>
+    </ul>
+    <p>AI生成は2023年8月ぐらいから開始。</p>
+  </article>
+</Layout>
+
+<style>
+  h2 {
+    margin: 2rem 0 1.5rem;
+  }
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  li {
+    margin-left: 2rem;
+  }
+
+  a {
+    color: aqua;
+  }
+  a:visited {
+    color: lightpink;
+  }
+</style>

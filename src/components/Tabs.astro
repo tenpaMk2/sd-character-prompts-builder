@@ -1,11 +1,12 @@
 ---
-export const tabKeys = [`main`, `usage`, `changelog`] as const;
+export const tabKeys = [`main`, `usage`, `changelog`, `others`] as const;
 export type TabKey = (typeof tabKeys)[number];
 
 export const tabNames: { [K in (typeof tabKeys)[number]]: string } = {
   main: `メイン`,
   usage: `使い方`,
   changelog: `更新履歴`,
+  others: `その他`,
 };
 
 interface Props {
