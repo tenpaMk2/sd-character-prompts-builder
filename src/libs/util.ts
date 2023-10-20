@@ -6,3 +6,8 @@ export const getKeys = <T extends { [key: string]: unknown }>(
 ): (keyof T)[] => {
   return Object.keys(obj);
 };
+
+export const isDuplicated = (array: readonly any[]) => {
+  const set = new Set(array);
+  return set.size !== array.length;
+};

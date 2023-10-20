@@ -1,4 +1,5 @@
 import { map } from "nanostores";
+import { isDuplicated } from "./util";
 
 export const allPrompts = [
   `aqua eyes`,
@@ -100,17 +101,13 @@ export const allPrompts = [
   `low twintails`,
   `short twintails`,
   `tri tails`,
-  `ponytail`,
-  `high ponytail`,
   `arched bangs`,
   `asymmetrical bangs`,
   `bangs pinned back`,
   `blunt bangs`,
   `crossed bangs`,
   `diagonal bangs`,
-  `blunt bangs`,
   `dyed bangs`,
-  `blunt bangs`,
   `hair over eyes`,
   `hair over one eye`,
   `long bangs`,
@@ -727,3 +724,23 @@ export const queryChildren = (
   const leafs = uITree[category];
   return leafs.reduce(recursiveSearch, []);
 };
+
+// Runtime validations
+
+if (isDuplicated(allPrompts)) {
+  for (const prompt of allPrompts) {
+    if (2 <= allPrompts.filter((p) => prompt === p).length) {
+      throw new Error(`\`${prompt}\` in \`allPrompts\` is duplicated!!`);
+    }
+  }
+
+  throw new Error("`allPrompts` is duplicated!!");
+}
+
+if (isDuplicated(allCategories)) {
+  throw new Error("`allCategories` is duplicated!!");
+}
+
+if (isDuplicated(allColorCategories)) {
+  throw new Error("`allColorCategories` is duplicated!!");
+}
