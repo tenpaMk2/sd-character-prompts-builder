@@ -18,7 +18,26 @@ const childLeafs = queryChildren(category, parentPrompt);
 ---
 
 <parent-prompt data-category={category} data-parent={parentPrompt}>
-  <button class="bar">{parentPrompt}</button>
+  <button class="bar">
+    <div class="bar-icon">
+      <svg
+        viewBox="0 0 16 16"
+        data-name="Line Color"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          stroke="rgb(var(--text-main))"
+          fill="none"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="12 8 6 12 6 4"></polygon>
+        </g>
+      </svg>
+    </div>
+    <span class="bar-text">{parentPrompt}</span>
+  </button>
   <div class="prompts-container hide">
     {
       childLeafs.map((leaf) => {
@@ -100,38 +119,73 @@ const childLeafs = queryChildren(category, parentPrompt);
 </script>
 
 <style>
-  button {
-    font-size: 1rem;
+  parent-prompt {
+    border: solid 1px rgb(var(--text-main));
     border-radius: 0.5rem;
-    padding: 0.4rem;
-    cursor: pointer;
+    overflow: hidden;
+
+    grid-column: span 3;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0;
+  }
+
+  button {
+    border: none;
     background-color: transparent;
+    cursor: pointer;
     outline: none;
     appearance: none;
     color: inherit;
-    border-color: rgb(var(--text-main));
+  }
+
+  .bar {
+    font-size: 1rem;
+    padding: 0.5rem;
     width: 100%;
+    background-color: rgb(100% 100% 100% / 0.1);
+
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: min-content 1fr;
+    grid-auto-flow: row;
+    align-items: center;
+  }
+
+  .bar-icon {
+    width: 2rem;
+    aspect-ratio: 1 / 1;
+    border: solid 1px;
+    border-radius: 9999rem;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition-duration: 200ms;
+  }
+
+  .opening > .bar {
+    grid-row: span 3;
+    background-color: rgb(var(--accent));
+    color: rgb(var(--text-main));
+    border-bottom: solid 1px rgb(var(--text-main));
+  }
+  .opening > .bar > .bar-icon {
+    rotate: 0.25turn;
+  }
+  .opening > .prompts-container {
+    padding: 0.5rem;
+
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-auto-flow: row dense;
   }
 
   .hide {
     display: none;
-  }
-
-  parent-prompt {
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 1rem;
-  }
-
-  .opening > .bar {
-    background-color: rgb(var(--accent));
-    color: rgb(var(--text-main));
-  }
-
-  .opening > .prompts-container {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    grid-auto-flow: row dense;
   }
 </style>
