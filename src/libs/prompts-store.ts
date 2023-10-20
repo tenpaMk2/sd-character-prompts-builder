@@ -301,8 +301,13 @@ export type ColorName =
   | `purple`
   | `light-purple`
   | `red`;
-export type ColorInfo = { prompt: Prompt; colorName: ColorName };
-export const colorCategoryTree: { [K in ColorCategory]: ColorInfo[] } = {
+export type ColorInfo = {
+  readonly prompt: Prompt;
+  readonly colorName: ColorName;
+};
+export const colorCategoryTree: {
+  readonly [K in ColorCategory]: readonly ColorInfo[];
+} = {
   "eyes-color": [
     { prompt: `aqua eyes`, colorName: `aqua` },
     { prompt: `black eyes`, colorName: `black` },
@@ -379,7 +384,7 @@ export const colorCategoryTree: { [K in ColorCategory]: ColorInfo[] } = {
     { prompt: `grey hairband`, colorName: `grey` },
     { prompt: `white hairband`, colorName: `white` },
   ],
-}; // TODO: as const
+} as const;
 
 type ChildPrompt = {
   readonly type: `child-prompt`;
