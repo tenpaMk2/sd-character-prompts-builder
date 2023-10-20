@@ -1,5 +1,5 @@
 import { map } from "nanostores";
-import { isDuplicated } from "./util";
+import { isDuplicated, isValidCSSName } from "./util";
 
 export const allPrompts = [
   `aqua eyes`,
@@ -270,37 +270,30 @@ export const allColorCategories = [
 ] as const;
 export type ColorCategory = (typeof allColorCategories)[number];
 
-export type ColorName =
-  | `none`
-  | `aqua`
-  | `black`
-  | `blue`
-  | `brown`
-  | `green`
-  | `grey`
-  | `orange`
-  | `purple`
-  | `pink`
-  | `red`
-  | `white`
-  | `yellow`
-  | `aqua`
-  | `black`
-  | `blonde`
-  | `blue`
-  | `light-blue`
-  | `dark-blue`
-  | `brown`
-  | `light-brown`
-  | `green`
-  | `dark-green`
-  | `light-green`
-  | `grey`
-  | `orange`
-  | `pink`
-  | `purple`
-  | `light-purple`
-  | `red`;
+export const allColorNames = [
+  `none`,
+  `aqua`,
+  `black`,
+  `blue`,
+  `brown`,
+  `green`,
+  `grey`,
+  `orange`,
+  `purple`,
+  `pink`,
+  `red`,
+  `white`,
+  `yellow`,
+  `blonde`,
+  `light-blue`,
+  `dark-blue`,
+  `light-brown`,
+  `dark-green`,
+  `light-green`,
+  `light-purple`,
+] as const;
+export type ColorName = (typeof allColorNames)[number];
+
 export type ColorInfo = {
   readonly prompt: Prompt;
   readonly colorName: ColorName;
@@ -748,4 +741,35 @@ if (isDuplicated(allCategories)) {
 
 if (isDuplicated(allColorCategories)) {
   throw new Error("`allColorCategories` is duplicated!!");
+}
+
+if (isDuplicated(allColorNames)) {
+  for (const colorName of allColorNames) {
+    if (2 <= allColorNames.filter((c) => colorName === c).length) {
+      throw new Error(`\`${colorName}\` in \`allColorName\` is duplicated!!`);
+    }
+  }
+
+  throw new Error("`allColorName` is duplicated!!");
+}
+
+for (const category of allCategories) {
+  if (!isValidCSSName(category))
+    throw new Error(
+      `\`${category}\` in \`allCategories\` is invalid CSS name.`,
+    );
+}
+
+for (const colorCateogry of allColorCategories) {
+  if (!isValidCSSName(colorCateogry))
+    throw new Error(
+      `\`${colorCateogry}\` in \`allColorCategories\` is invalid CSS name.`,
+    );
+}
+
+for (const colorName of allColorNames) {
+  if (!isValidCSSName(colorName))
+    throw new Error(
+      `\`${colorName}\` in \`allColorNames\` is invalid CSS name.`,
+    );
 }

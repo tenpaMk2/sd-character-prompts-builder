@@ -11,3 +11,6 @@ export const isDuplicated = (array: readonly any[]) => {
   const set = new Set(array);
   return set.size !== array.length;
 };
+
+export const isValidCSSName = (name: string) =>
+  /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/.test(name);
