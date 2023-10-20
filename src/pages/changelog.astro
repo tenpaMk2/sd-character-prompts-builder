@@ -12,8 +12,42 @@ const layoutInfo = {
 
 <Layout {...layoutInfo}>
   <article>
+    <h2>v2.0.0</h2>
+    <p>大幅改修。</p>
+    <ul>
+      <li>カラーピッカ追加</li>
+      <li>親子関係のあるプロンプトのグルーピング</li>
+      <li>髪色や胸の大きさなどの各種プロンプトを大幅に追加</li>
+    </ul>
+    <p>
+      詳細は<a href="https://github.com/tenpaMk2/sd-character-prompts-builder"
+        >GitHub</a
+      >見て。
+    </p>
+
     <h2>v1.0.0</h2>
     <p>とりあえずリリース。</p>
     <p>カテゴリごとに分けたり、カラーピッカー実装したりは次のバージョン。</p>
   </article>
 </Layout>
+
+<style>
+  h2 {
+    margin: 2rem 0 1.5rem;
+  }
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  li {
+    margin-left: 2rem;
+  }
+
+  a {
+    color: aqua;
+  }
+  a:visited {
+    color: lightpink;
+  }
+</style>
