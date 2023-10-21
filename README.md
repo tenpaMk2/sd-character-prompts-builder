@@ -33,6 +33,13 @@ create `/.env` file and set your Google Analytics Measurement ID like below.
 GOOGLE_MEASUREMENT_ID="G-**********"
 ```
 
+## 📖 Tech stack
+
+- [Astro](https://astro.build/)
+- [Vite](https://vitejs.dev/)
+
+No Reacts❗ No CSS framework❗
+
 ## 🤔 Ask questions or report bugs
 
 Create issue ticket❗
