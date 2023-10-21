@@ -1,5 +1,5 @@
 import { map } from "nanostores";
-import { isDuplicated, isValidCSSName } from "./util";
+import { getKeys, isDuplicated, isValidCSSName } from "./util";
 
 export const allPrompts = [
   `aqua eyes`,
@@ -543,9 +543,7 @@ export const uITree: { [K in Category]: UILeaf[] } = {
     { type: `child-prompt`, prompt: `blunt bangs` },
     { type: `child-prompt`, prompt: `crossed bangs` },
     { type: `child-prompt`, prompt: `diagonal bangs` },
-    { type: `child-prompt`, prompt: `blunt bangs` },
     { type: `child-prompt`, prompt: `dyed bangs` },
-    { type: `child-prompt`, prompt: `blunt bangs` },
     { type: `child-prompt`, prompt: `hair over eyes` },
     { type: `child-prompt`, prompt: `hair over one eye` },
     { type: `child-prompt`, prompt: `long bangs` },
@@ -811,4 +809,12 @@ for (const colorName of allColorNames) {
     throw new Error(
       `\`${colorName}\` in \`allColorNames\` is invalid CSS name.`,
     );
+}
+
+for (const category of getKeys(uITree)) {
+  const prompts = queryAllPromptsByCategory(category);
+
+  if (isDuplicated(prompts)) {
+    throw new Error(`Prompts in \`${category}\` are duplicated!!`);
+  }
 }
