@@ -79,7 +79,7 @@ const categoryInfo = new Map(
   const pre = document.querySelector(`#prompts-output`)! as HTMLPreElement;
 
   button.addEventListener(`click`, () => {
-    navigator.clipboard.writeText(pre.textContent!);
+    navigator.clipboard.writeText(pre.innerText);
     button.classList.add(`transition`);
   });
   button.addEventListener(`transitioncancel`, () =>
