@@ -691,10 +691,22 @@ export const uITree: { [K in Category]: UILeaf[] } = {
       type: `parent-prompt`,
       prompt: `animal ears`,
       children: [
-        { type: `child-prompt`, prompt: `cat ears` },
-        { type: `child-prompt`, prompt: `cat tail` },
-        { type: `child-prompt`, prompt: `fox ears` },
-        { type: `child-prompt`, prompt: `fox tail` },
+        {
+          type: `parent-prompt`,
+          prompt: `cat girl`,
+          children: [
+            { type: `child-prompt`, prompt: `cat ears` },
+            { type: `child-prompt`, prompt: `cat tail` },
+          ],
+        },
+        {
+          type: `parent-prompt`,
+          prompt: `fox girl`,
+          children: [
+            { type: `child-prompt`, prompt: `fox ears` },
+            { type: `child-prompt`, prompt: `fox tail` },
+          ],
+        },
         { type: `child-prompt`, prompt: `animal ear fluff` },
       ],
     },
@@ -816,5 +828,14 @@ for (const category of getKeys(uITree)) {
 
   if (isDuplicated(prompts)) {
     throw new Error(`Prompts in \`${category}\` are duplicated!!`);
+  }
+}
+
+const allPromptsInTree = getKeys(uITree)
+  .map((category) => queryAllPromptsByCategory(category))
+  .flat();
+for (const prompt of allPrompts) {
+  if (!allPromptsInTree.includes(prompt)) {
+    throw new Error(`\`${prompt}\` is defined but not used!!`);
   }
 }
