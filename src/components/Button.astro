@@ -1,0 +1,29 @@
+---
+// If you want to use this component by JS, query from parent components by `class` argument .
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<button class={className} {...rest} type="button">
+  <slot />
+</button>
+
+<style>
+  button {
+    border: none;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    color: inherit;
+
+    font-size: 0.8rem;
+    padding: 0.4rem;
+    border: solid 2px rgb(var(--text-main));
+    border-radius: 9999rem;
+    color: black;
+    transition-duration: 200ms;
+  }
+  button:hover {
+    border-color: rgb(var(--accent));
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import { allCategories } from "../libs/prompts-store";
 import SliderButton from "./SliderButton.astro";
+import Button from "./Button.astro";
 
 const n = allCategories.length;
 const categoryInfo = new Map(
@@ -16,14 +17,14 @@ const categoryInfo = new Map(
 );
 ---
 
-<section class="flex-column">
+<section is="output-area" class="flex-column">
   <header>
     <h2>出力</h2>
   </header>
   <div class="flex-column">
     <div class="flex-row">
       <p>1行出力</p>
-      <SliderButton key="oneLine" />
+      <SliderButton id="one-line-mode-button" />
     </div>
   </div>
   <div class="flex-row">
@@ -31,63 +32,81 @@ const categoryInfo = new Map(
       id="prompts-output">{allCategories.map((category) =>
       (<code class={categoryInfo.get(category)?.className} style={`background-color:${categoryInfo.get(category)?.color}`} /><br class="line-break" />))
         }</pre>
-    <button id="prompts-copy-button">📋</button>
+    <Button id="prompts-copy-button" class="clipboard-button">
+      <span>📋</span>
+    </Button>
   </div>
 </section>
 
 <script>
+  import { atom, computed } from "nanostores";
   import {
     allCategories,
     promptEnableInfoStore,
     queryAllPromptsByCategory,
   } from "../libs/prompts-store";
-  import { sliderButtonStoreMap } from "../libs/slider-button-store";
-  import { computed } from "nanostores";
 
-  const oneLineStore = sliderButtonStoreMap.get(`oneLine`)!;
+  class OutputArea extends HTMLElement {
+    constructor() {
+      super();
 
-  const outputMaterials = computed(
-    [oneLineStore, promptEnableInfoStore],
-    (isOneLine, promptEnableInfo) => ({
-      isOneLine,
-      promptEnableInfo,
-    }),
-  );
+      // Setup output prompts area.
 
-  outputMaterials.subscribe(({ isOneLine, promptEnableInfo }) => {
-    for (const category of allCategories) {
-      const allPrompts = queryAllPromptsByCategory(category);
-      const categoryOutputs = allPrompts
-        .map((prompt) => (promptEnableInfo[prompt] ? `${prompt}, ` : ``))
-        .join(``);
+      const oneLineInput: HTMLInputElement | null = this.querySelector(
+        `#one-line-mode-button > input`,
+      );
+      if (!oneLineInput)
+        throw new Error("`#one-line-mode-button > input` is not found!!");
 
-      const code = document.querySelector(`#prompts-output > .${category}`)!;
-      code.textContent = categoryOutputs;
+      const isOneLineModeStore = atom(oneLineInput.checked);
+
+      oneLineInput.addEventListener(`change`, () =>
+        isOneLineModeStore.set(oneLineInput.checked),
+      );
+
+      const promptsOutputMaterial = computed(
+        [promptEnableInfoStore, isOneLineModeStore],
+        (promptEnableInfo, isOneLineMode) => ({
+          promptEnableInfo,
+          isOneLineMode,
+        }),
+      );
+      promptsOutputMaterial.subscribe(({ promptEnableInfo, isOneLineMode }) => {
+        for (const category of allCategories) {
+          const allPrompts = queryAllPromptsByCategory(category);
+          const categoryOutputs = allPrompts
+            .map((prompt) => (promptEnableInfo[prompt] ? `${prompt}, ` : ``))
+            .join(``);
+
+          const code = this.querySelector(`#prompts-output > .${category}`)!;
+          code.textContent = categoryOutputs;
+        }
+
+        const brs: NodeListOf<HTMLBRElement> = this.querySelectorAll(
+          `#prompts-output > .line-break`,
+        );
+        for (const br of brs) {
+          br.style.display = isOneLineMode ? `none` : `unset`;
+        }
+      });
+
+      // Setup copy button.
+
+      const copyButton: HTMLButtonElement | null =
+        this.querySelector(`#prompts-copy-button`);
+      if (!copyButton)
+        throw new Error("`#prompts-copy-button` is not found !!");
+
+      const promptsOutput: HTMLPreElement | null =
+        this.querySelector(`#prompts-output`);
+      if (!promptsOutput) throw new Error("`#prompts-output` is not found !!");
+
+      copyButton.addEventListener(`click`, () => {
+        navigator.clipboard.writeText(promptsOutput.innerText);
+      });
     }
-
-    const brs: NodeListOf<HTMLBRElement> = document.querySelectorAll(
-      `#prompts-output > .line-break`,
-    );
-    for (const br of brs) {
-      br.style.display = isOneLine ? `none` : `unset`;
-    }
-  });
-
-  const button = document.querySelector(
-    `#prompts-copy-button`,
-  )! as HTMLButtonElement;
-  const pre = document.querySelector(`#prompts-output`)! as HTMLPreElement;
-
-  button.addEventListener(`click`, () => {
-    navigator.clipboard.writeText(pre.innerText);
-    button.classList.add(`transition`);
-  });
-  button.addEventListener(`transitioncancel`, () =>
-    button.classList.remove(`transition`),
-  );
-  button.addEventListener(`transitionend`, () =>
-    button.classList.remove(`transition`),
-  );
+  }
+  customElements.define(`output-area`, OutputArea, { extends: `section` });
 </script>
 
 <style>
@@ -104,7 +123,7 @@ const categoryInfo = new Map(
     gap: 1rem;
   }
 
-  section {
+  section[is="output-area"] {
     background-color: rgb(var(--background-sub));
     border-radius: 1rem;
     padding: 1rem;
@@ -122,17 +141,13 @@ const categoryInfo = new Map(
     flex: 1 1 0;
   }
 
-  button {
-    flex: 0 0 3rem;
-    aspect-ratio: 1 / 1;
-    border-radius: 9999px;
-    cursor: pointer;
+  #prompts-copy-button > span {
     font-size: 1.5rem;
-    transition-duration: 200ms;
-    rotate: 0deg;
-  }
+    width: 2rem;
+    height: 2rem;
 
-  .transition {
-    rotate: 360deg;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

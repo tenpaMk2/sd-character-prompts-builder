@@ -3,6 +3,7 @@ import { uITree, type Category } from "../libs/prompts-store";
 import ParentPrompt from "./ParentPrompt.astro";
 import PromptButton from "./PromptButton.astro";
 import ColorButton from "./ColorButton.astro";
+import Button from "./Button.astro";
 
 interface Props {
   name: string;
@@ -15,7 +16,7 @@ const { name, category } = Astro.props;
 <category-area data-category={category}>
   <header>
     <h2>{name}</h2>
-    <button class="clear-button" type="button">Clear</button>
+    <Button class="clear-button">Clear</Button>
   </header>
   <div class="prompts">
     {
@@ -92,11 +93,6 @@ const { name, category } = Astro.props;
 
   h2 {
     font-size: 1.5rem;
-  }
-
-  .clear-button {
-    padding: 0.4rem;
-    border-radius: 9999px;
   }
 
   .hide {
