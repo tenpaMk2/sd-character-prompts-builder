@@ -590,9 +590,14 @@ export const uITree: { [K in Category]: UILeaf[] } = {
     { type: `child-prompt`, prompt: `hair slicked back` },
   ],
   "hair-misc": [
-    { type: `child-prompt`, prompt: `alternate hairstyle` },
-    { type: `child-prompt`, prompt: `hair down` },
-    { type: `child-prompt`, prompt: `hair up` },
+    {
+      type: `parent-prompt`,
+      prompt: `alternate hairstyle`,
+      children: [
+        { type: `child-prompt`, prompt: `hair down` },
+        { type: `child-prompt`, prompt: `hair up` },
+      ],
+    },
   ],
   "hair-ornament": [
     {
