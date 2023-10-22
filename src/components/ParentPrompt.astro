@@ -119,8 +119,17 @@ const childLeafs = queryChildren(category, parentPrompt);
 </script>
 
 <style>
+  button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    color: inherit;
+  }
+
   parent-prompt {
-    border: solid 1px rgb(var(--text-main));
+    border: solid 2px rgb(var(--text-main));
     border-radius: 0.5rem;
     overflow: hidden;
 
@@ -130,14 +139,9 @@ const childLeafs = queryChildren(category, parentPrompt);
     flex-flow: column nowrap;
     gap: 0;
   }
-
-  button {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    outline: none;
-    appearance: none;
-    color: inherit;
+  parent-prompt:hover {
+    border-color: rgb(var(--accent));
+    transition-duration: 200ms;
   }
 
   .bar {
@@ -168,8 +172,9 @@ const childLeafs = queryChildren(category, parentPrompt);
     transition-duration: 200ms;
   }
 
-  .opening {
+  parent-prompt.opening {
     grid-row: span 3;
+    background-color: rgb(var(--accent-dark) / 0.2);
   }
 
   .opening > .bar {
@@ -178,9 +183,11 @@ const childLeafs = queryChildren(category, parentPrompt);
     color: rgb(var(--text-main));
     border-bottom: solid 1px rgb(var(--text-main));
   }
+
   .opening > .bar > .bar-icon {
     rotate: 0.25turn;
   }
+
   .opening > .prompts-container {
     padding: 0.5rem;
 
