@@ -69,6 +69,7 @@ import PromptButton from "./PromptButton.astro";
     width: 100%;
     max-width: 720px;
     background-color: rgb(var(--background-sub));
+    border: solid 3px rgb(var(--text-main));
     border-radius: 1rem;
     padding: 1rem;
     box-shadow: 0 0 1rem rgb(var(--accent-light));
@@ -103,10 +104,13 @@ import PromptButton from "./PromptButton.astro";
 
   .done {
     font-size: larger;
-    background-color: transparent;
-    border: solid 1px rgb(var(--text-main));
-    border-radius: 1rem;
-    width: min-content;
+    border: solid 3px rgb(var(--text-main));
+    border-radius: 9999rem;
     padding: 1rem 3rem;
+    cursor: pointer;
+    transition-duration: 200ms;
+  }
+  .done:hover {
+    border-color: rgb(var(--accent));
   }
 </style>
