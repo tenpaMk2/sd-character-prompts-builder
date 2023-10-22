@@ -144,6 +144,7 @@ const childLeafs = queryChildren(category, parentPrompt);
     font-size: 1rem;
     padding: 0.5rem;
     width: 100%;
+    height: 100%;
     background-color: rgb(100% 100% 100% / 0.1);
 
     display: grid;
@@ -167,8 +168,12 @@ const childLeafs = queryChildren(category, parentPrompt);
     transition-duration: 200ms;
   }
 
-  .opening > .bar {
+  .opening {
     grid-row: span 3;
+  }
+
+  .opening > .bar {
+    height: auto;
     background-color: rgb(var(--accent));
     color: rgb(var(--text-main));
     border-bottom: solid 1px rgb(var(--text-main));
