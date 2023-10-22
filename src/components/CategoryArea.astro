@@ -60,12 +60,6 @@ const { name, category } = Astro.props;
           promptEnableInfoStore.setKey(prompt, false);
         }
       });
-
-      const multipleEnablesWarning = this.querySelector(
-        `.mupltiple-enables-warning`,
-      );
-      if (!multipleEnablesWarning)
-        throw new Error("`.multipleEnablesWarning` is not found!!");
     }
   }
 
