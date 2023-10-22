@@ -45,13 +45,9 @@ import PromptButton from "./PromptButton.astro";
       const colorCategory = this.dataset.colorCategory as ColorCategory;
 
       modalEnableStore.subscribe((modalEnable) => {
-        console.log(colorCategory);
-        console.table(modalEnable);
-
         if (modalEnable[colorCategory]) {
           this.showModal();
         } else {
-          console.log(`${colorCategory}: close!!`);
           this.close();
         }
       });
