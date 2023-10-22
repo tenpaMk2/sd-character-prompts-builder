@@ -12,6 +12,31 @@ const layoutInfo = {
 
 <Layout {...layoutInfo}>
   <article>
+    <h2>v2.1.0</h2>
+    <ul>
+      <li>
+        🔥
+        同一カテゴリで2個以上のpromptを有効化したときの警告を削除。別に警告しなくても良いと判断
+      </li>
+      <li>⚡️ メガネ👓カテゴリの追加</li>
+      <li>
+        ⚡️ <code>wide ponytail</code> , <code>cat girl</code> , <code
+          >fox girl</code
+        > の追加
+      </li>
+      <li>
+        💄
+        各種見た目を調整。特にグループを展開したときに他のpromptが隙間に回り込むように
+      </li>
+      <li>🐛 複数行出力モードのときに改行がコピーされない問題を修正</li>
+      <li>🐛 他、細かいバグ修正</li>
+    </ul>
+    <p>
+      詳細は<a href="https://github.com/tenpaMk2/sd-character-prompts-builder"
+        >GitHub</a
+      >見て。
+    </p>
+
     <h2>v2.0.0</h2>
     <p>大幅改修。</p>
     <ul>
@@ -50,5 +75,9 @@ const layoutInfo = {
   }
   a:visited {
     color: lightpink;
+  }
+
+  code {
+    background-color: rgb(0 0 0 / 0.2);
   }
 </style>
