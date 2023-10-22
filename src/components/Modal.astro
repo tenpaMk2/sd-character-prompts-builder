@@ -39,6 +39,10 @@ import PromptButton from "./PromptButton.astro";
       if (!done) throw new Error("`.done` is not found!!");
 
       done.addEventListener(`click`, () => {
+        this.close();
+      });
+
+      this.addEventListener(`close`, () => {
         modalEnableStore.setKey(colorCategory, false);
       });
 
