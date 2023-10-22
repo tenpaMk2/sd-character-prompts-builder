@@ -92,7 +92,9 @@ const { colorCategory } = Astro.props;
     outline: none;
     appearance: none;
     color: inherit;
+  }
 
+  button[is="color-button"] {
     font-size: 1rem;
     border-radius: 0.5rem;
     border: solid 1px rgb(var(--text-main));
@@ -103,63 +105,6 @@ const { colorCategory } = Astro.props;
     display: flex;
     flex-flow: column nowrap;
     gap: 0.4rem;
-    align-items: center;
-  }
-
-  .modal {
-    background-color: rgb(0 0 0 / 0.3);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 1rem;
-
-    z-index: 1;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content {
-    width: 100%;
-    max-width: 720px;
-    background-color: rgb(var(--background-sub));
-    border-radius: 1rem;
-    padding: 1rem;
-    box-shadow: 0 0 1rem rgb(var(--accent-light));
-
-    max-height: 100%;
-    overflow: auto;
-
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .color-buttons-wrapper {
-    width: 100%;
-    display: grid;
-    gap: 0.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-    grid-auto-flow: row dense;
-  }
-
-  .done {
-    font-size: larger;
-    background-color: transparent;
-    border: solid 1px rgb(var(--text-main));
-    border-radius: 1rem;
-    width: min-content;
-    padding: 1rem 3rem;
-  }
-
-  .marker-and-prompt-wrapper {
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 0.5rem;
     align-items: center;
   }
 
