@@ -142,6 +142,7 @@ export const allPrompts = [
   `ponytail`,
   `folded ponytail`,
   `high ponytail`,
+  `low ponytail`,
   `short ponytail`,
   `wide ponytail`,
   `side ponytail`,
@@ -640,6 +641,7 @@ export const uITree: { [K in Category]: UILeaf[] } = {
       children: [
         { type: `child-prompt`, prompt: `folded ponytail` },
         { type: `child-prompt`, prompt: `high ponytail` },
+        { type: `child-prompt`, prompt: `low ponytail` },
         { type: `child-prompt`, prompt: `short ponytail` },
         { type: `child-prompt`, prompt: `wide ponytail` },
         { type: `child-prompt`, prompt: `side ponytail` },
