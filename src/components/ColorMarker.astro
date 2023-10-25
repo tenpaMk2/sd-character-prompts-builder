@@ -33,10 +33,10 @@ const colorRGBDefine: { readonly [K in ColorName]: string } = {
 const colorRGB = colorRGBDefine[colorName];
 ---
 
-<i class={colorName}></i>
+<span class={colorName}></span>
 
 <style define:vars={{ colorRGB }}>
-  i {
+  span {
     display: inline-block;
     width: 2em;
     aspect-ratio: 1 / 1;
@@ -45,7 +45,7 @@ const colorRGB = colorRGBDefine[colorName];
     border-radius: 9999rem;
   }
 
-  i.none {
+  span.none {
     border: dashed;
   }
 </style>

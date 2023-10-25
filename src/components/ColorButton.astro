@@ -10,19 +10,19 @@ const { colorCategory } = Astro.props;
 ---
 
 <button is="color-button" data-color-category={colorCategory}>
-  <div class="markers-wrapper">
-    <div class={`marker-wrapper none`}>
+  <span class="markers-wrapper">
+    <span class={`marker-wrapper none`}>
       <ColorMarker colorName="none" />
-    </div>
+    </span>
     {
       colorCategoryTree[colorCategory].map(({ colorName }) => (
-        <div class={`marker-wrapper ${colorName} hide`}>
+        <span class={`marker-wrapper ${colorName} hide`}>
           <ColorMarker colorName={colorName} />
-        </div>
+        </span>
       ))
     }
-  </div>
-  <p>{colorCategory}</p>
+  </span>
+  <span>{colorCategory}</span>
 </button>
 
 <script>

@@ -15,10 +15,10 @@ import PromptButton from "./PromptButton.astro";
       <div class="color-buttons-wrapper">
         {colorCategoryTree[colorCategory].map(({ prompt, colorName }) => (
           <PromptButton prompt={prompt}>
-            <p class="marker-and-prompt-wrapper">
+            <span class="marker-and-prompt-wrapper">
               <ColorMarker colorName={colorName} />
               <span>{prompt}</span>
-            </p>
+            </span>
           </PromptButton>
         ))}
       </div>
